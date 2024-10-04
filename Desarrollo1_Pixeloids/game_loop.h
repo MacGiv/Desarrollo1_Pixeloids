@@ -5,44 +5,15 @@ namespace pixeloids_luchelli
 {
 
 
-void runGame()
-{
-	// Initialization
-	initializeGame();
+	void runGame();
 
-	// Main game loop
-	while (!WindowShouldClose())    // Detect window close button or ESC key
-	{
-		update();
 
-		draw();
-	}
+	void initializeGame();
 
-	//Close game
-	close();
+void update();
 
-}
+void draw();
 
-void initializeGame()
-{
-	
-	InitWindow(screenWidth, screenHeight, "PONG");
-	
-}
-
-void update()
-{
-
-}
-
-void draw() 
-{
-
-}
-
-void close()
-{
-	CloseWindow();
-}
+void close();
 
 }
