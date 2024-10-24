@@ -1,45 +1,54 @@
 #include "game_loop.h"
+#include "player.h"
+#include "game_data.h"
 
 namespace pixeloids_luchelli
 {
 
-void runGame()
+Player player;
+
+void runGame() 
 {
-	// Initialization
-	initializeGame();
+    initializeGame();
 
-	// Main game loop
-	while (!WindowShouldClose())    // Detect window close button or ESC key
-	{
-		update();
+    while (!WindowShouldClose()) 
+    {
+        update();
 
-		draw();
-	}
+        draw();
+    }
 
-	//Close game
-	close();
+    close();
 }
 
 void initializeGame()
 {
+    InitWindow(screenWidth, screenHeight, "Asteroids - Player Movement");
 
-	InitWindow(screenWidth, screenHeight, "PONG");
-
+    InitializePlayer(player);
 }
 
-void update()
+void update() 
 {
-
+    UpdatePlayer(player);
 }
 
-void draw()
+void draw() 
 {
+    BeginDrawing();
 
+    // Gameplay
+    ClearBackground(BLACK);
+
+    DrawPlayer(player);
+    // Fin de gameplay
+
+    EndDrawing();
 }
 
 void close()
 {
-	CloseWindow();
+    CloseWindow();
 }
 
 }
