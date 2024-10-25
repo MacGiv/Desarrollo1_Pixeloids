@@ -9,10 +9,10 @@ namespace pixeloids_luchelli
     {
         Vector2 position;
         Vector2 velocity;
-        float rotation; // Angulo hacia el mouse
-        float radius;   // Radio del circulo que representa la nave
-        float speed;    // Velocidad de aceleracion
-        float maxSpeed; // Velocidad maxima
+        float rotation; // Angle to mouse position
+        float radius;
+        float speed;
+        float maxSpeed;
     };
 
     void InitializePlayer(Player& player);
@@ -23,4 +23,4 @@ namespace pixeloids_luchelli
 
 }
 
-#endif // PLAYER_H
+#endif
