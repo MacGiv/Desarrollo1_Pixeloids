@@ -15,11 +15,11 @@ namespace pixeloids_luchelli
         float maxSpeed;
     };
 
-    void InitializePlayer(Player& player);
+    void initializePlayer(Player& player);
 
-    void UpdatePlayer(Player& player);
+    void updatePlayer(Player& player);
 
-    void DrawPlayer(const Player& player);
+    void drawPlayer(const Player& player);
 
 }
 

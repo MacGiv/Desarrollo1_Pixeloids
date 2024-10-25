@@ -30,28 +30,28 @@ void initializeGame()
 {
     InitWindow(screenWidth, screenHeight, "Asteroids");
 
-    InitializePlayer(player);
+    initializePlayer(player);
 
-    InitializeBulletArray(bullets, maxBullets);
+    initializeBulletArray(bullets, maxBullets);
 }
 
 void update() 
 {
 
     // GAMEPLAY UPDATE
-    UpdatePlayer(player);
+    updatePlayer(player);
 
     // Bullet Update
     for (int i = 0; i < maxBullets; i++) 
     {
-        UpdateBullet(bullets[i]);
+        updateBullet(bullets[i]);
     }
 
     // Shoot update
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
-        FireBullet(bullets, maxBullets, player.position, direction);
+        fireBullet(bullets, maxBullets, player.position, direction);
     }
     // END OF GAMEPLAY UPDATE
 }
@@ -66,10 +66,10 @@ void draw()
     //Draw Bullets
     for (int i = 0; i < maxBullets; i++) 
     {
-        DrawBullet(bullets[i]);
+        drawBullet(bullets[i]);
     }
 
-    DrawPlayer(player);
+    drawPlayer(player);
     // END OF GAMEPLAY DRAW
 
     EndDrawing();

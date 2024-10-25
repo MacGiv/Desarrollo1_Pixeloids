@@ -4,17 +4,17 @@
 namespace pixeloids_luchelli
 {
 
-    void InitializePlayer(Player& player) 
+    void initializePlayer(Player& player) 
     {
         player.position = { 400.0f, 300.0f }; // Start pos
         player.velocity = { 0.0f, 0.0f };
         player.rotation = 0.0f;
         player.radius = 20.0f;
-        player.speed = 400.0f; 
-        player.maxSpeed = 1000.0f;
+        player.speed = 500.0f; 
+        player.maxSpeed = 800.0f;
     }
 
-    void UpdatePlayer(Player& player)
+    void updatePlayer(Player& player)
     {
         // Get Mouse direction
         Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
@@ -38,20 +38,20 @@ namespace pixeloids_luchelli
         player.position = Vector2Add(player.position, Vector2Scale(player.velocity, GetFrameTime()));
 
         // Screen borders check
-        if (player.position.x < 0) 
-            player.position.x = static_cast<float>(GetScreenWidth());
+        if (player.position.x < -player.radius) 
+            player.position.x = static_cast<float>(GetScreenWidth()) + player.radius;
 
-        if (player.position.x > GetScreenWidth()) 
-            player.position.x = 0;
+        if (player.position.x > GetScreenWidth() + player.radius) 
+            player.position.x = -player.radius;
 
-        if (player.position.y < 0) 
-            player.position.y = static_cast<float>(GetScreenHeight());
+        if (player.position.y < -player.radius) 
+            player.position.y = static_cast<float>(GetScreenHeight()) + player.radius;
 
-        if (player.position.y > GetScreenHeight()) 
-            player.position.y = 0;
+        if (player.position.y > GetScreenHeight() + player.radius) 
+            player.position.y = -player.radius;
     }
 
-    void DrawPlayer(const Player& player) 
+    void drawPlayer(const Player& player) 
     {
         DrawCircleV(player.position, player.radius, RED);
 

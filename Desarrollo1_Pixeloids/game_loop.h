@@ -4,14 +4,14 @@
 namespace pixeloids_luchelli
 {
 
-void initializeGame();
-
 void runGame();
 
-void update();
+static void initializeGame();
 
-void draw();
+static void update();
 
-void close();
+static void draw();
+
+static void close();
 
 }
