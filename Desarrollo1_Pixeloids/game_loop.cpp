@@ -37,6 +37,8 @@ void initializeGame()
 
 void update() 
 {
+
+    // GAMEPLAY UPDATE
     UpdatePlayer(player);
 
     // Bullet Update
@@ -51,13 +53,14 @@ void update()
         Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
         FireBullet(bullets, maxBullets, player.position, direction);
     }
+    // END OF GAMEPLAY UPDATE
 }
 
 void draw() 
 {
     BeginDrawing();
 
-    // Gameplay
+    // GAMEPLAY DRAW
     ClearBackground(BLACK);
 
     //Draw Bullets
@@ -67,8 +70,7 @@ void draw()
     }
 
     DrawPlayer(player);
-
-    // Fin de gameplay
+    // END OF GAMEPLAY DRAW
 
     EndDrawing();
 }
