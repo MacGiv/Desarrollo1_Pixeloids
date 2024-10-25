@@ -4,21 +4,28 @@
 namespace pixeloids_luchelli
 {
 
-void InitializeBullet(Bullet& bullet) 
+
+void InitializeBulletArray(Bullet bullets[], int arraySize)
 {
-    bullet.position = { 0, 0 };
-    bullet.velocity = { 0, 0 };
-    bullet.active = false;
-    bullet.radius = 5.0f; 
+    for (int i = 0; i < arraySize; i++)
+    {
+        bullets[i].active = false;
+        bullets[i].radius = bulletDefaultRadius;
+        bullets[i].speed = bulletDefaultSpeed;
+    }
 }
 
-void ShootBullet(Bullet& bullet, Vector2 startPos, Vector2 direction, float speed) 
+void FireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direction)
 {
-    if (!bullet.active) 
+    for (int i = 0; i < arraySize; i++)
     {
-        bullet.position = startPos;
-        bullet.velocity = Vector2Scale(Vector2Normalize(direction), speed);
-        bullet.active = true;
+        if (!bullets[i].active)
+        {
+            bullets[i].position = position;
+            bullets[i].velocity = Vector2Scale(Vector2Normalize(direction), bullets[i].speed);
+            bullets[i].active = true;
+            break;
+        }
     }
 }
 
@@ -37,12 +44,14 @@ void UpdateBullet(Bullet& bullet)
     }
 }
 
-void DrawBullet(const Bullet& bullet) 
+void DrawBullet(Bullet bullet) 
 {
     if (bullet.active) 
     {
         DrawCircleV(bullet.position, bullet.radius, YELLOW);
     }
 }
+
+
 
 }
