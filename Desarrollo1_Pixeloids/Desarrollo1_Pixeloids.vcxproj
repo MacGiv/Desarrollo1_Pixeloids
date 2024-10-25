@@ -143,11 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="game_loop.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bullet.h" />
     <ClInclude Include="game_data.h" />
     <ClInclude Include="game_loop.h" />
     <ClInclude Include="player.h" />
