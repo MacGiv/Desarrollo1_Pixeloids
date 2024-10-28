@@ -17,8 +17,6 @@ struct Bullet
     float speed;
 };
 
-void initializeBulletArray(Bullet bullets[], int size);
-
 void fireBullet(Bullet bullets[], int size, Vector2 position, Vector2 direction);
 
 void updateBullet(Bullet& bullet);
