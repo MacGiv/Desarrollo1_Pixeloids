@@ -7,6 +7,14 @@
 namespace pixeloids_luchelli
 {
 
+static void initializeGame();
+
+static void update();
+
+static void draw();
+
+static void close();
+
 Player player;
 const int maxBullets = 100;
 Bullet bullets[maxBullets];
