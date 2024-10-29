@@ -14,9 +14,9 @@ struct Asteroid {
     AsteroidSize size;
 };
 
-const int maxLargeAsteroids = 10;
-const int maxMediumAsteroids = 20;
-const int maxSmallAsteroids = 40;
+const int maxLargeAsteroids = 15;
+const int maxMediumAsteroids = 35;
+const int maxSmallAsteroids = 50;
 
 void InitializeAsteroid(Asteroid& asteroid, Vector2 position, Vector2 velocity, AsteroidSize size);
 

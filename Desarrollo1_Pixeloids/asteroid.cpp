@@ -59,6 +59,7 @@ void DrawAsteroid(Asteroid asteroid)
 
 void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount) 
 {
+
     asteroid.active = false;
     asteroidCount--;
     int maxAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
@@ -76,10 +77,12 @@ void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCoun
             if (!asteroids[i].active) 
             {
                 InitializeAsteroid(asteroids[i], asteroid.position, newVelocity1, newSize);
+                asteroidCount++;
                 i++;
                 if (i < maxAsteroids)
                 {
                     InitializeAsteroid(asteroids[i], asteroid.position, newVelocity2, newSize);
+                    asteroidCount++;
                 }
                 break;
             }
