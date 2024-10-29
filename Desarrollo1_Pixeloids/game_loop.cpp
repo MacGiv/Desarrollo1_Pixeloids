@@ -85,7 +85,6 @@ void update()
 
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
-        // GAMEPLAY UPDATE
         updatePlayer(player);
 
         // Bullet Update
@@ -103,10 +102,8 @@ void update()
 
         // Asteroids update
         updateAsteroids(asteroids);
-
         handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
 
-        // END OF GAMEPLAY UPDATE
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
 

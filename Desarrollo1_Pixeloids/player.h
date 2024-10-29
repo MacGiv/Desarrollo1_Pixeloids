@@ -5,21 +5,21 @@
 
 namespace pixeloids_luchelli
 {
-    struct Player 
-    {
-        Vector2 position;
-        Vector2 velocity;
-        float rotation; // Angle to mouse position
-        float radius;
-        float speed;
-        float maxSpeed;
-    };
+struct Player 
+{
+    Vector2 position;
+    Vector2 velocity;
+    float rotation; // Angle to mouse position
+    float radius;
+    float speed;
+    float maxSpeed;
+};
 
-    void initializePlayer(Player& player);
+void initializePlayer(Player& player);
 
-    void updatePlayer(Player& player);
+void updatePlayer(Player& player);
 
-    void drawPlayer(const Player& player);
+void drawPlayer(const Player& player);
 
 }
 
