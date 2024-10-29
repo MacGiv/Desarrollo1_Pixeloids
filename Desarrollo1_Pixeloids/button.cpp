@@ -16,7 +16,7 @@ namespace pixeloids_luchelli
     void DrawButton(const Button& button) 
     {
         DrawRectangleRec(button.rect, button.color);
-        DrawText(button.text, button.rect.x + 10, button.rect.y + 10, 20, BLACK);
+        DrawText(button.text, static_cast<int>(button.rect.x) + 10, static_cast<int>(button.rect.y) + 10, 20, BLACK);
     }
 
     bool IsButtonClicked(const Button& button) 

@@ -4,9 +4,11 @@
 #include "bullet.h"
 #include "raymath.h"
 #include "asteroid.h"
+#include "button.h"
 
 namespace pixeloids_luchelli
 {
+
 enum class Borders {
     LEFT,
     RIGHT,
@@ -18,6 +20,7 @@ enum class GameStates {
     PLAYING,
     PAUSED,
     GAME_OVER,
+    CREDITS,
     EXIT
 };
 struct GameStateMachine
@@ -38,12 +41,16 @@ int activeAsteroidCount = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCuurentLives = playerMaxLives;
 
+static Button playButton, resumeButton, exitButton, backToMenuButton;
+
 static void initializeGame();
 static void update();
 static void draw();
 static void close();
+static void initializeButtons();
 static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
+static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
 static void drawAsteroids(Asteroid asteroidsArray[]);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
@@ -67,8 +74,8 @@ void runGame()
 
 void initializeGame()
 {
-    gameState.currentState = GameStates::PLAYING;
-    gameState.nextState = GameStates::PLAYING;
+    gameState.currentState = GameStates::MENU;
+    gameState.nextState = GameStates::MENU;
     playerCuurentLives = playerMaxLives;
 
     InitWindow(screenWidth, screenHeight, "Asteroids");
@@ -78,6 +85,8 @@ void initializeGame()
     initializeBulletArray(bullets, maxBullets);
 
     initializeAsteroids(asteroids);
+
+    initializeButtons();
 }
 
 void update() 
@@ -85,7 +94,7 @@ void update()
     switch (gameState.currentState)
     {
     case pixeloids_luchelli::GameStates::MENU:
-
+        updateMenu();
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
         updatePlayer(player);
@@ -109,10 +118,18 @@ void update()
 
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
+        if (IsButtonClicked(resumeButton))
+            gameState.nextState = GameStates::PLAYING;
 
+        if (IsButtonClicked(backToMenuButton))
+            gameState.nextState = GameStates::MENU;
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
+        if (IsButtonClicked(backToMenuButton))
+            gameState.nextState = GameStates::MENU;
 
+        if (IsButtonClicked(exitButton))
+            gameState.nextState = GameStates::EXIT;
         break;
     case pixeloids_luchelli::GameStates::EXIT:
 
@@ -124,19 +141,20 @@ void update()
     gameState.currentState = gameState.nextState;
 }
 
+
+
 void draw() 
 {
     BeginDrawing();
+    ClearBackground(BLACK);
 
     switch (gameState.currentState)
     {
     case pixeloids_luchelli::GameStates::MENU:
-
+        DrawButton(playButton);
+        DrawButton(exitButton);
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
-        ClearBackground(BLACK);
-
-        //Draw Bullets
         for (int i = 0; i < maxBullets; i++)
         {
             drawBullet(bullets[i]);
@@ -147,13 +165,16 @@ void draw()
         drawAsteroids(asteroids);
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
-
+        DrawText("Paused", 350, 250, 20, WHITE);
+        DrawButton(resumeButton);
+        DrawButton(backToMenuButton);
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
-
+        DrawText("Game Over", 350, 250, 20, WHITE);
+        DrawButton(backToMenuButton);
+        DrawButton(exitButton);
         break;
     case pixeloids_luchelli::GameStates::EXIT:
-
         break;
     default:
         break;
@@ -167,6 +188,14 @@ void close()
     CloseWindow();
 }
 
+
+void initializeButtons() 
+{
+    playButton = CreateButton({ 100, 100 }, { 150, 50 }, "Play");
+    resumeButton = CreateButton({ 100, 200 }, { 150, 50 }, "Resume");
+    exitButton = CreateButton({ 100, 300 }, { 150, 50 }, "Exit");
+    backToMenuButton = CreateButton({ 100, 400 }, { 150, 50 }, "Menu");
+}
 
 void initializeBulletArray(Bullet bulletsArray[], int arraySize)
 {
@@ -216,6 +245,14 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
         velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))), -asteroidStartSpeed };
         break;
     }
+}
+
+void updateMenu()
+{
+    if (IsButtonClicked(playButton))
+        gameState.nextState = GameStates::PLAYING;
+    if (IsButtonClicked(exitButton))
+        gameState.nextState = GameStates::EXIT;
 }
 
 void updateAsteroids(Asteroid asteroidsArray[])
