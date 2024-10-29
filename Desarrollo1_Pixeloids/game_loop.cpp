@@ -26,6 +26,7 @@ struct GameStateMachine
     GameStates nextState;
 };
 
+const int playerMaxLives = 3;
 const int maxBullets = 100;
 const int totalAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
 const float asteroidStartSpeed = 150.0f;
@@ -35,6 +36,7 @@ Asteroid asteroids[totalAsteroids];
 GameStateMachine gameState{};
 int activeAsteroidCount = 0;
 int smallAsteroidDestroyedCount = 0;
+int playerCuurentLives = playerMaxLives;
 
 static void initializeGame();
 static void update();
@@ -67,7 +69,8 @@ void initializeGame()
 {
     gameState.currentState = GameStates::PLAYING;
     gameState.nextState = GameStates::PLAYING;
-    
+    playerCuurentLives = playerMaxLives;
+
     InitWindow(screenWidth, screenHeight, "Asteroids");
 
     initializePlayer(player);
