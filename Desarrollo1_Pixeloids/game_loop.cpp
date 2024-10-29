@@ -79,48 +79,85 @@ void initializeGame()
 
 void update() 
 {
-
-    // GAMEPLAY UPDATE
-    updatePlayer(player);
-
-    // Bullet Update
-    for (int i = 0; i < maxBullets; i++) 
+    switch (gameState.currentState)
     {
-        updateBullet(bullets[i]);
+    case pixeloids_luchelli::GameStates::MENU:
+
+        break;
+    case pixeloids_luchelli::GameStates::PLAYING:
+        // GAMEPLAY UPDATE
+        updatePlayer(player);
+
+        // Bullet Update
+        for (int i = 0; i < maxBullets; i++)
+        {
+            updateBullet(bullets[i]);
+        }
+
+        // Shoot update
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
+            fireBullet(bullets, maxBullets, player.position, direction);
+        }
+
+        // Asteroids update
+        updateAsteroids(asteroids);
+
+        handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
+
+        // END OF GAMEPLAY UPDATE
+        break;
+    case pixeloids_luchelli::GameStates::PAUSED:
+
+        break;
+    case pixeloids_luchelli::GameStates::GAME_OVER:
+
+        break;
+    case pixeloids_luchelli::GameStates::EXIT:
+
+        break;
+    default:
+        break;
     }
-
-    // Shoot update
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-    {
-        Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
-        fireBullet(bullets, maxBullets, player.position, direction);
-    }
-
-    // Asteroids update
-    updateAsteroids(asteroids);
-
-    handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
-
-    // END OF GAMEPLAY UPDATE
+    
+    gameState.currentState = gameState.nextState;
 }
 
 void draw() 
 {
     BeginDrawing();
 
-    // GAMEPLAY DRAW
-    ClearBackground(BLACK);
-
-    //Draw Bullets
-    for (int i = 0; i < maxBullets; i++) 
+    switch (gameState.currentState)
     {
-        drawBullet(bullets[i]);
-    }
+    case pixeloids_luchelli::GameStates::MENU:
 
-    drawPlayer(player);
-    
-    drawAsteroids(asteroids);
-    // END OF GAMEPLAY DRAW
+        break;
+    case pixeloids_luchelli::GameStates::PLAYING:
+        ClearBackground(BLACK);
+
+        //Draw Bullets
+        for (int i = 0; i < maxBullets; i++)
+        {
+            drawBullet(bullets[i]);
+        }
+
+        drawPlayer(player);
+
+        drawAsteroids(asteroids);
+        break;
+    case pixeloids_luchelli::GameStates::PAUSED:
+
+        break;
+    case pixeloids_luchelli::GameStates::GAME_OVER:
+
+        break;
+    case pixeloids_luchelli::GameStates::EXIT:
+
+        break;
+    default:
+        break;
+    }
 
     EndDrawing();
 }
