@@ -1,5 +1,7 @@
-#pragma once
 #include "raylib.h"
+
+#ifndef ASTEROID
+#define ASTEROID
 
 namespace pixeloids_luchelli 
 {
@@ -26,4 +28,6 @@ void DrawAsteroid(Asteroid asteroid);
 
 void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount);
 
-}  
+}
+
+#endif
