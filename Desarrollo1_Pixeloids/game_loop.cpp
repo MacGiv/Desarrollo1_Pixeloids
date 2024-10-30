@@ -129,6 +129,8 @@ void update()
 
         // Asteroids update
         updateAsteroids(asteroids);
+
+        // Collision check
         handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
         handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
         break;
