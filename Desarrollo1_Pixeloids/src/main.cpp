@@ -1,9 +1,8 @@
 #include "game_loop.h"
-using namespace pixeloids_luchelli;
 
 int main()
 {
-	runGame();
+	pixeloids_luchelli::runGame();
 
 	return 0;
 }

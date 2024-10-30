@@ -5,17 +5,7 @@ namespace pixeloids_luchelli
 {
 
 
-void InitializeBulletArray(Bullet bullets[], int arraySize)
-{
-    for (int i = 0; i < arraySize; i++)
-    {
-        bullets[i].active = false;
-        bullets[i].radius = bulletDefaultRadius;
-        bullets[i].speed = bulletDefaultSpeed;
-    }
-}
-
-void FireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direction)
+void fireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direction)
 {
     for (int i = 0; i < arraySize; i++)
     {
@@ -29,7 +19,7 @@ void FireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direc
     }
 }
 
-void UpdateBullet(Bullet& bullet) 
+void updateBullet(Bullet& bullet) 
 {
     if (bullet.active) 
     {
@@ -44,7 +34,7 @@ void UpdateBullet(Bullet& bullet)
     }
 }
 
-void DrawBullet(Bullet bullet) 
+void drawBullet(Bullet bullet) 
 {
     if (bullet.active) 
     {

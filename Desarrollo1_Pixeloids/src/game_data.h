@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAME_DATA
+#define GAME_DATA
 
 #include "raylib.h"
 
@@ -9,3 +10,5 @@ const int screenWidth = 1024;
 const int screenHeight = 768;
 
 }
+
+#endif
