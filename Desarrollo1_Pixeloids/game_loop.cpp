@@ -41,7 +41,7 @@ int activeAsteroidCount = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCuurentLives = playerMaxLives;
 
-static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton;
+static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton, pauseButton;
 
 static void initializeGame();
 static void update();
@@ -52,6 +52,7 @@ static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
 static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
+static void drawMenu();
 static void drawCredits();
 static void drawAsteroids(Asteroid asteroidsArray[]);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
@@ -109,8 +110,15 @@ void update()
         // Shoot update
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
-            fireBullet(bullets, maxBullets, player.position, direction);
+            if (isButtonClicked(pauseButton))
+            {
+                gameState.nextState = GameStates::PAUSED;
+            }
+            else
+            {
+                Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
+                fireBullet(bullets, maxBullets, player.position, direction);
+            }
         }
 
         // Asteroids update
@@ -148,7 +156,6 @@ void update()
 }
 
 
-
 void draw() 
 {
     BeginDrawing();
@@ -157,9 +164,7 @@ void draw()
     switch (gameState.currentState)
     {
     case pixeloids_luchelli::GameStates::MENU:
-        drawButton(playButton);
-        drawButton(exitButton);
-        drawButton(creditsButton);
+        drawMenu();
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
         for (int i = 0; i < maxBullets; i++)
@@ -170,9 +175,11 @@ void draw()
         drawPlayer(player);
 
         drawAsteroids(asteroids);
+
+        drawButton(pauseButton);
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
-        DrawText("Paused", 350, 250, 20, WHITE);
+        DrawText("Paused", GetScreenWidth() / 2, (GetScreenHeight() / 5) * 2, 20, WHITE);
         drawButton(resumeButton);
         drawButton(backToMenuButton);
         break;
@@ -203,10 +210,15 @@ void close()
 void initializeButtons() 
 {
     playButton = createButton({ 100, 100 }, { 150, 50 }, "Play");
-    resumeButton = createButton({ 100, 200 }, { 150, 50 }, "Resume");
-    exitButton = createButton({ 100, 300 }, { 150, 50 }, "Exit");
-    backToMenuButton = createButton({ 100, 400 }, { 150, 50 }, "Menu");
-    creditsButton = createButton({ 100, 500 }, { 150, 50 }, "Credits");
+    creditsButton = createButton({ 100, 300 }, { 150, 50 }, "Credits");
+    exitButton = createButton({ 100, 500 }, { 150, 50 }, "Exit");
+
+    float backToMenuX = (screenWidth / 16);
+    float pauseX = (screenWidth / 16) * 14;
+    float pauseY = (screenHeight / 8) * 7;
+    resumeButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Resume");
+    pauseButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Pause");
+    backToMenuButton = createButton({ backToMenuX, pauseY }, { 100, 50 }, "Menu");
 }
 
 void initializeBulletArray(Bullet bulletsArray[], int arraySize)
@@ -236,7 +248,7 @@ void initializeAsteroids(Asteroid asteroidsArray[])
 
 void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
 {
-    // Random border (0 = left, 1 = right, 2 = top, 3 = bottom)
+    // Borders (0 = left, 1 = right, 2 = top, 3 = bottom)
     int border = GetRandomValue(static_cast<int>(Borders::LEFT), static_cast<int>(Borders::BOTTOM));
     switch (static_cast<Borders>(border))
     {
@@ -275,6 +287,13 @@ void updateAsteroids(Asteroid asteroidsArray[])
     {
         UpdateAsteroid(asteroidsArray[i]);
     }
+}
+
+void drawMenu()
+{
+    drawButton(playButton);
+    drawButton(exitButton);
+    drawButton(creditsButton);
 }
 
 void drawCredits()
