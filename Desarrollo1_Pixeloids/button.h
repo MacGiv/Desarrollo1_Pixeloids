@@ -14,9 +14,9 @@ struct Button
     Color color;
 };
 
-Button CreateButton(Vector2 position, Vector2 size, const char* text);
-void DrawButton(const Button& button);
-bool IsButtonClicked(const Button& button);
+Button createButton(Vector2 position, Vector2 size, const char* text);
+void drawButton(Button& button);
+bool isButtonClicked(Button& button);
 
 }
 

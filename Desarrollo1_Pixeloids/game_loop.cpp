@@ -41,7 +41,7 @@ int activeAsteroidCount = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCuurentLives = playerMaxLives;
 
-static Button playButton, resumeButton, exitButton, backToMenuButton;
+static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton;
 
 static void initializeGame();
 static void update();
@@ -52,6 +52,7 @@ static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
 static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
+static void drawCredits();
 static void drawAsteroids(Asteroid asteroidsArray[]);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
@@ -115,24 +116,29 @@ void update()
         // Asteroids update
         updateAsteroids(asteroids);
         handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
-
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
-        if (IsButtonClicked(resumeButton))
+        if (isButtonClicked(resumeButton))
             gameState.nextState = GameStates::PLAYING;
 
-        if (IsButtonClicked(backToMenuButton))
+        if (isButtonClicked(backToMenuButton))
             gameState.nextState = GameStates::MENU;
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
-        if (IsButtonClicked(backToMenuButton))
+        if (isButtonClicked(backToMenuButton))
             gameState.nextState = GameStates::MENU;
 
-        if (IsButtonClicked(exitButton))
+        if (isButtonClicked(exitButton))
             gameState.nextState = GameStates::EXIT;
         break;
+    case pixeloids_luchelli::GameStates::CREDITS:
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            gameState.nextState = GameStates::MENU;
+        }
+        break;
     case pixeloids_luchelli::GameStates::EXIT:
-
+        close();
         break;
     default:
         break;
@@ -151,8 +157,9 @@ void draw()
     switch (gameState.currentState)
     {
     case pixeloids_luchelli::GameStates::MENU:
-        DrawButton(playButton);
-        DrawButton(exitButton);
+        drawButton(playButton);
+        drawButton(exitButton);
+        drawButton(creditsButton);
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
         for (int i = 0; i < maxBullets; i++)
@@ -166,15 +173,19 @@ void draw()
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
         DrawText("Paused", 350, 250, 20, WHITE);
-        DrawButton(resumeButton);
-        DrawButton(backToMenuButton);
+        drawButton(resumeButton);
+        drawButton(backToMenuButton);
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
         DrawText("Game Over", 350, 250, 20, WHITE);
-        DrawButton(backToMenuButton);
-        DrawButton(exitButton);
+        drawButton(backToMenuButton);
+        drawButton(exitButton);
+        break;
+    case pixeloids_luchelli::GameStates::CREDITS:
+        drawCredits();
         break;
     case pixeloids_luchelli::GameStates::EXIT:
+
         break;
     default:
         break;
@@ -191,10 +202,11 @@ void close()
 
 void initializeButtons() 
 {
-    playButton = CreateButton({ 100, 100 }, { 150, 50 }, "Play");
-    resumeButton = CreateButton({ 100, 200 }, { 150, 50 }, "Resume");
-    exitButton = CreateButton({ 100, 300 }, { 150, 50 }, "Exit");
-    backToMenuButton = CreateButton({ 100, 400 }, { 150, 50 }, "Menu");
+    playButton = createButton({ 100, 100 }, { 150, 50 }, "Play");
+    resumeButton = createButton({ 100, 200 }, { 150, 50 }, "Resume");
+    exitButton = createButton({ 100, 300 }, { 150, 50 }, "Exit");
+    backToMenuButton = createButton({ 100, 400 }, { 150, 50 }, "Menu");
+    creditsButton = createButton({ 100, 500 }, { 150, 50 }, "Credits");
 }
 
 void initializeBulletArray(Bullet bulletsArray[], int arraySize)
@@ -249,10 +261,12 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
 
 void updateMenu()
 {
-    if (IsButtonClicked(playButton))
+    if (isButtonClicked(playButton))
         gameState.nextState = GameStates::PLAYING;
-    if (IsButtonClicked(exitButton))
+    if (isButtonClicked(exitButton))
         gameState.nextState = GameStates::EXIT;
+    if (isButtonClicked(creditsButton))
+        gameState.nextState = GameStates::CREDITS;
 }
 
 void updateAsteroids(Asteroid asteroidsArray[])
@@ -261,6 +275,27 @@ void updateAsteroids(Asteroid asteroidsArray[])
     {
         UpdateAsteroid(asteroidsArray[i]);
     }
+}
+
+void drawCredits()
+{
+    ClearBackground(BLACK);
+
+    const char* title = "Credits";
+    int titleX = screenWidth / 2 - MeasureText(title, 20) / 2;
+    int titleY = screenHeight / 2 - 60;
+
+    const char* credits = "Made by Tomas Francisco Luchelli";
+    int creditsX = screenWidth / 2 - MeasureText(credits, 15) / 2;
+    int creditsY = screenHeight / 2;
+
+    const char* returnText = "Press Mouse Button to Return";
+    int returnTextX = screenWidth / 2 - MeasureText(returnText, 15) / 2;
+    int returnTextY = screenHeight / 2 + 40;
+
+    DrawText(title, titleX, titleY, 20, ORANGE);
+    DrawText(credits, creditsX, creditsY, 15, WHITE);
+    DrawText(returnText, returnTextX, returnTextY, 15, GRAY);
 }
 
 void drawAsteroids(Asteroid asteroidsArray[])
