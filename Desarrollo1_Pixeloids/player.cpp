@@ -12,6 +12,7 @@ void initializePlayer(Player& player)
     player.radius = 20.0f;
     player.speed = 500.0f; 
     player.maxSpeed = 800.0f;
+    player.sprite = LoadTexture("res/ship.png");
 }
 
 void updatePlayer(Player& player)
@@ -61,6 +62,19 @@ void drawPlayer(const Player& player)
     Vector2 lineEnd = Vector2Add(player.position, Vector2Scale(direction, lineLength));
     DrawLineV(player.position, lineEnd, RAYWHITE);
     // Debug direction line end
+
+    Rectangle sourceRect = { 0.0f, 0.0f, 64.0f, 64.0f };
+    Rectangle destRect = { player.position.x, player.position.y, player.radius * 3.0f, player.radius * 3.0f };
+    Vector2 origin = { 32.0f, 32.0f };
+
+    DrawTexturePro(
+        player.sprite,      
+        sourceRect,         
+        destRect,           
+        origin,             
+        player.rotation + 90.0f, // Adjusted to correct sprite direction
+        WHITE               
+    );
 }
 
 }

@@ -13,6 +13,7 @@ struct Player
     float radius;
     float speed;
     float maxSpeed;
+    Texture2D sprite;
 };
 
 void initializePlayer(Player& player);

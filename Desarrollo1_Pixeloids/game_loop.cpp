@@ -216,6 +216,7 @@ void draw()
 
 void close()
 {
+    UnloadTexture(player.sprite);
     CloseWindow();
 }
 
