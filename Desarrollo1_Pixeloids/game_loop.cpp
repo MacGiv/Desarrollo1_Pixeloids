@@ -32,6 +32,7 @@ struct GameStateMachine
 const int playerMaxLives = 3;
 const int maxBullets = 100;
 const int totalAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
+const int lifeTextSize = 20;
 const float asteroidStartSpeed = 150.0f;
 Player player;
 Bullet bullets[maxBullets];
@@ -39,7 +40,7 @@ Asteroid asteroids[totalAsteroids];
 GameStateMachine gameState{};
 int activeAsteroidCount = 0;
 int smallAsteroidDestroyedCount = 0;
-int playerCuurentLives = playerMaxLives;
+int playerCurrentLives = playerMaxLives;
 
 static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton, pauseButton;
 
@@ -50,13 +51,15 @@ static void close();
 static void initializeButtons();
 static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
+static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
 static void drawMenu();
 static void drawCredits();
 static void drawAsteroids(Asteroid asteroidsArray[]);
+static void drawPlayerLives(int lives);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
-static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
+static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
 
 
 
@@ -76,11 +79,14 @@ void runGame()
 
 void initializeGame()
 {
-    gameState.currentState = GameStates::MENU;
-    gameState.nextState = GameStates::MENU;
-    playerCuurentLives = playerMaxLives;
+    if (gameState.currentState != GameStates::GAME_OVER)
+    {
+        gameState.currentState = GameStates::MENU;
+        gameState.nextState = GameStates::MENU;
+        InitWindow(screenWidth, screenHeight, "Asteroids");
+    }
+    playerCurrentLives = playerMaxLives;
 
-    InitWindow(screenWidth, screenHeight, "Asteroids");
 
     initializePlayer(player);
 
@@ -124,6 +130,7 @@ void update()
         // Asteroids update
         updateAsteroids(asteroids);
         handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
+        handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
         if (isButtonClicked(resumeButton))
@@ -134,8 +141,10 @@ void update()
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
         if (isButtonClicked(backToMenuButton))
+        {
             gameState.nextState = GameStates::MENU;
-
+            initializeGame();
+        }
         if (isButtonClicked(exitButton))
             gameState.nextState = GameStates::EXIT;
         break;
@@ -177,6 +186,8 @@ void draw()
         drawAsteroids(asteroids);
 
         drawButton(pauseButton);
+
+        drawPlayerLives(playerCurrentLives);
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
         DrawText("Paused", GetScreenWidth() / 2, (GetScreenHeight() / 5) * 2, 20, WHITE);
@@ -328,6 +339,16 @@ void drawAsteroids(Asteroid asteroidsArray[])
     }
 }
 
+void drawPlayerLives(int lives)
+{
+    const char* lifeText = TextFormat("Lives: %d", lives);
+    int textWidth = MeasureText(lifeText, lifeTextSize);
+    int posX = (screenWidth - textWidth) / 2;
+    int posY = screenHeight / 16; 
+
+    DrawText(lifeText, posX, posY, lifeTextSize, WHITE);
+}
+
 void handleBulletAsteroidCollisions(Bullet bulletsArray[], Asteroid asteroidsArray[], int& asteroidCount)
 {
     for (int i = 0; i < maxBullets; i++)
@@ -365,5 +386,28 @@ void handleBulletAsteroidCollisions(Bullet bulletsArray[], Asteroid asteroidsArr
         }
     }
 }
+
+void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount)
+{
+    for (int i = 0; i < asteroidCount; i++)
+    {
+        if (asteroidsArray[i].active)
+        {
+            float distance = Vector2Distance(auxPlayer.position, asteroidsArray[i].position);
+            if (distance < auxPlayer.radius + asteroidsArray[i].radius)
+            {
+                playerCurrentLives--;
+                asteroidsArray[i].active = false;
+
+                if (playerCurrentLives <= 0)
+                {
+                    gameState.nextState = GameStates::GAME_OVER;
+                }
+                break; 
+            }
+        }
+    }
+}
+
 
 }
