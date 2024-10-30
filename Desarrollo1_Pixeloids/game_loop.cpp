@@ -281,21 +281,24 @@ void drawCredits()
 {
     ClearBackground(BLACK);
 
+    int titleSize = 60;
+    int normalTextSize = 30;
+
     const char* title = "Credits";
-    int titleX = screenWidth / 2 - MeasureText(title, 20) / 2;
-    int titleY = screenHeight / 2 - 60;
+    int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
+    int titleY = (screenHeight / 5) * 1;
 
     const char* credits = "Made by Tomas Francisco Luchelli";
-    int creditsX = screenWidth / 2 - MeasureText(credits, 15) / 2;
-    int creditsY = screenHeight / 2;
+    int creditsX = screenWidth / 2 - MeasureText(credits, normalTextSize) / 2;
+    int creditsY = (screenHeight / 5) * 3;
 
     const char* returnText = "Press Mouse Button to Return";
-    int returnTextX = screenWidth / 2 - MeasureText(returnText, 15) / 2;
-    int returnTextY = screenHeight / 2 + 40;
+    int returnTextX = screenWidth / 2 - MeasureText(returnText, normalTextSize) / 2;
+    int returnTextY = (screenHeight / 5) * 4;
 
-    DrawText(title, titleX, titleY, 20, ORANGE);
-    DrawText(credits, creditsX, creditsY, 15, WHITE);
-    DrawText(returnText, returnTextX, returnTextY, 15, GRAY);
+    DrawText(title, titleX, titleY, titleSize, ORANGE);
+    DrawText(credits, creditsX, creditsY, normalTextSize, WHITE);
+    DrawText(returnText, returnTextX, returnTextY, normalTextSize, GRAY);
 }
 
 void drawAsteroids(Asteroid asteroidsArray[])
