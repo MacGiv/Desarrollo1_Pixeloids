@@ -75,6 +75,7 @@ void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCoun
 
     asteroid.active = false;
     asteroidCount--;
+    score += 10;
     int maxAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
     float rotationAngle = 30.0f;
 
@@ -96,7 +97,6 @@ void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCoun
                 {
                     InitializeAsteroid(asteroids[i], asteroid.position, newVelocity2, newSize);
                     asteroidCount++;
-                    score += 10;
                 }
                 break;
             }

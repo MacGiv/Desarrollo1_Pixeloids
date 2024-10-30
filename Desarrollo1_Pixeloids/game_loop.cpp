@@ -381,7 +381,7 @@ void handleBulletAsteroidCollisions(Bullet bulletsArray[], Asteroid asteroidsArr
                     {
                         // Deactivate bullet and destroy asteroid
                         bullets[i].active = false;
-                        DestroyAsteroid(asteroidsArray[j], asteroidsArray, asteroidCount);
+                        DestroyAsteroid(asteroidsArray[j], asteroidsArray, asteroidCount, playerScore);
 
                         if (asteroidsArray[j].size == AsteroidSize::SMALL)
                         {
