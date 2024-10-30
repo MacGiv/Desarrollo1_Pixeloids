@@ -310,6 +310,9 @@ void updateAsteroids(Asteroid asteroidsArray[])
 
 void drawMenu()
 {
+    Vector2 titlePosition = { (static_cast<float>(GetScreenWidth()) - MeasureText("PIXELOIDS", 40)) / 2.0f, 50.0f };
+    DrawText("PIXELOIDS", static_cast<int>(titlePosition.x), static_cast<int>(titlePosition.y), 40, ORANGE);
+    
     drawButton(playButton);
     drawButton(exitButton);
     drawButton(creditsButton);

@@ -54,15 +54,6 @@ void updatePlayer(Player& player)
 
 void drawPlayer(Player& player) 
 {
-    DrawCircleV(player.position, player.radius, RED);
-
-    // Debug direction line start
-    float lineLength = 50.0f;
-    Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
-    Vector2 lineEnd = Vector2Add(player.position, Vector2Scale(direction, lineLength));
-    DrawLineV(player.position, lineEnd, RAYWHITE);
-    // Debug direction line end
-
     Rectangle sourceRect = { 0.0f, 0.0f, 64.0f, 64.0f };
     Rectangle destRect = { player.position.x, player.position.y, player.radius * 3.0f, player.radius * 3.0f };
     Vector2 origin = { 32.0f, 32.0f };
