@@ -38,7 +38,9 @@ Player player;
 Bullet bullets[maxBullets];
 Asteroid asteroids[totalAsteroids];
 GameStateMachine gameState{};
+Texture2D aSprite ;
 int activeAsteroidCount = 0;
+int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCurrentLives = playerMaxLives;
 
@@ -56,8 +58,9 @@ static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
 static void drawMenu();
 static void drawCredits();
-static void drawAsteroids(Asteroid asteroidsArray[]);
+static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
 static void drawPlayerLives(int lives);
+static void drawScore(int score);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
 
@@ -85,12 +88,15 @@ void initializeGame()
         gameState.nextState = GameStates::MENU;
         InitWindow(screenWidth, screenHeight, "Asteroids");
     }
-    playerCurrentLives = playerMaxLives;
 
+    playerScore = 0;
+    playerCurrentLives = playerMaxLives;
 
     initializePlayer(player);
 
     initializeBulletArray(bullets, maxBullets);
+
+    aSprite = LoadTexture("res/asteroid.png");
 
     initializeAsteroids(asteroids);
 
@@ -184,12 +190,10 @@ void draw()
         }
 
         drawPlayer(player);
-
-        drawAsteroids(asteroids);
-
+        drawAsteroids(asteroids, aSprite);
         drawButton(pauseButton);
-
         drawPlayerLives(playerCurrentLives);
+        drawScore(playerScore);
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
         DrawText("Paused", GetScreenWidth() / 2, (GetScreenHeight() / 5) * 2, 20, WHITE);
@@ -217,6 +221,7 @@ void draw()
 void close()
 {
     UnloadTexture(player.sprite);
+    UnloadTexture(aSprite);
     CloseWindow();
 }
 
@@ -334,11 +339,11 @@ void drawCredits()
     DrawText(returnText, returnTextX, returnTextY, normalTextSize, GRAY);
 }
 
-void drawAsteroids(Asteroid asteroidsArray[])
+void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite)
 {
     for (int i = 0; i < totalAsteroids; i++) 
     {
-        DrawAsteroid(asteroidsArray[i]);
+        DrawAsteroid(asteroidsArray[i], asteroidSprite);
     }
 }
 
@@ -350,6 +355,15 @@ void drawPlayerLives(int lives)
     int posY = screenHeight / 16; 
 
     DrawText(lifeText, posX, posY, lifeTextSize, WHITE);
+}
+
+void drawScore(int score)
+{
+    // Configura la posición en la esquina superior derecha
+    Vector2 position = { static_cast<float>(GetScreenWidth() - 100), 10.0f }; // Ajusta el '100' según el tamaño del texto
+
+    // Puedes usar el tamaño y color que prefieras
+    DrawText(TextFormat("Score: %d", score), static_cast<int>(position.x), static_cast<int>(position.y), 20, WHITE);
 }
 
 void handleBulletAsteroidCollisions(Bullet bulletsArray[], Asteroid asteroidsArray[], int& asteroidCount)

@@ -20,7 +20,7 @@ void initializePlayer(Player& player);
 
 void updatePlayer(Player& player);
 
-void drawPlayer(const Player& player);
+void drawPlayer(Player& player);
 
 }
 

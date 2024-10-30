@@ -49,15 +49,28 @@ void UpdateAsteroid(Asteroid& asteroid)
     }
 }
 
-void DrawAsteroid(Asteroid asteroid) 
+void DrawAsteroid(Asteroid& asteroid, Texture2D& asteroidSprite)
 {
-    if (asteroid.active) 
+    if (asteroid.active)
     {
-        DrawCircleV(asteroid.position, asteroid.radius, GRAY);
+        float scaleFactor = asteroid.radius / 32.0f;  
+
+        Rectangle sourceRect = { 0.0f, 0.0f, 64.0f, 64.0f }; 
+        Rectangle destRect = { asteroid.position.x, asteroid.position.y, 64.0f * scaleFactor, 64.0f * scaleFactor };
+        Vector2 origin = { 32.0f, 32.0f }; 
+
+        DrawTexturePro(
+            asteroidSprite,            
+            sourceRect,                
+            destRect,                  
+            origin,                    
+            0.0f,                      
+            WHITE                      
+        );
     }
 }
 
-void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount) 
+void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount, int& score) 
 {
 
     asteroid.active = false;
@@ -83,6 +96,7 @@ void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCoun
                 {
                     InitializeAsteroid(asteroids[i], asteroid.position, newVelocity2, newSize);
                     asteroidCount++;
+                    score += 10;
                 }
                 break;
             }

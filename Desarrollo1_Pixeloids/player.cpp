@@ -52,7 +52,7 @@ void updatePlayer(Player& player)
         player.position.y = -player.radius;
 }
 
-void drawPlayer(const Player& player) 
+void drawPlayer(Player& player) 
 {
     DrawCircleV(player.position, player.radius, RED);
 
