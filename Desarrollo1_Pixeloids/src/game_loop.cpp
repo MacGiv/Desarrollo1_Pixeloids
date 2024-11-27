@@ -38,7 +38,8 @@ Player player;
 Bullet bullets[maxBullets];
 Asteroid asteroids[totalAsteroids];
 GameStateMachine gameState{};
-Texture2D aSprite ;
+Texture2D aSprite;
+Texture2D currentBulletSprite;
 int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
@@ -97,6 +98,8 @@ void initializeGame()
     initializeBulletArray(bullets, maxBullets);
 
     aSprite = LoadTexture("res/asteroid.png");
+
+    currentBulletSprite = LoadTexture("res/asteroid.png");
 
     initializeAsteroids(asteroids);
 
@@ -186,7 +189,7 @@ void draw()
     case pixeloids_luchelli::GameStates::PLAYING:
         for (int i = 0; i < maxBullets; i++)
         {
-            drawBullet(bullets[i]);
+            drawBullet(bullets[i], currentBulletSprite);
         }
 
         drawPlayer(player);
@@ -222,6 +225,7 @@ void close()
 {
     UnloadTexture(player.sprite);
     UnloadTexture(aSprite);
+    UnloadTexture(currentBulletSprite);
     CloseWindow();
 }
 
@@ -430,4 +434,4 @@ void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[]
 }
 
 
-}
+} // namespace pixeloids_luchelli

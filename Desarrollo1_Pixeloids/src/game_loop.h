@@ -8,7 +8,6 @@ namespace pixeloids_luchelli
 
 void runGame();
 
-
-}
+} // namespace pixeloids_luchelli
 
 #endif

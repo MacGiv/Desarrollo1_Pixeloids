@@ -34,11 +34,26 @@ void updateBullet(Bullet& bullet)
     }
 }
 
-void drawBullet(Bullet bullet) 
+void drawBullet(Bullet bullet, Texture2D texture)
 {
     if (bullet.active) 
     {
         DrawCircleV(bullet.position, bullet.radius, YELLOW);
+
+        Rectangle sourceRect = { 0.0f, 0.0f, 64.0f, 64.0f };
+        Rectangle destRect = { bullet.position.x - bullet.radius, bullet.position.y - bullet.radius,
+                               bullet.radius * 3, bullet.radius * 3 };
+        Vector2 origin = { 0.0f, 0.0f };
+
+        DrawTexturePro(
+            texture,
+            sourceRect,
+            destRect,
+            origin,
+            0,  // 0 Rotation
+            WHITE
+        );
+
     }
 }
 

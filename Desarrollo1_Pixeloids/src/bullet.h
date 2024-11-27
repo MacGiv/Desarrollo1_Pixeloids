@@ -1,6 +1,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 #include "raylib.h"
+#include "player.h"
 
 namespace pixeloids_luchelli
 {
@@ -21,7 +22,7 @@ void fireBullet(Bullet bullets[], int size, Vector2 position, Vector2 direction)
 
 void updateBullet(Bullet& bullet);
 
-void drawBullet(Bullet bullet);
+void drawBullet(Bullet bullet, Texture2D texture);
 
 #endif
 
