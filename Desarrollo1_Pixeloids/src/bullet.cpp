@@ -41,8 +41,8 @@ void drawBullet(Bullet bullet, Texture2D texture)
         DrawCircleV(bullet.position, bullet.radius, YELLOW);
 
         Rectangle sourceRect = { 0.0f, 0.0f, 64.0f, 64.0f };
-        Rectangle destRect = { bullet.position.x - bullet.radius, bullet.position.y - bullet.radius,
-                               bullet.radius * 3, bullet.radius * 3 };
+        Rectangle destRect = { bullet.position.x - bullet.radius * 2, bullet.position.y - bullet.radius * 2,
+                               bullet.radius * 4, bullet.radius * 4 };
         Vector2 origin = { 0.0f, 0.0f };
 
         DrawTexturePro(
