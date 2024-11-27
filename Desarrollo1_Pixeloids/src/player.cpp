@@ -68,4 +68,4 @@ void drawPlayer(Player& player)
     );
 }
 
-}
+} // namespace pixeloids_luchelli
