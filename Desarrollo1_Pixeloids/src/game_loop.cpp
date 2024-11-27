@@ -40,6 +40,7 @@ Asteroid asteroids[totalAsteroids];
 GameStateMachine gameState{};
 Texture2D aSprite;
 Texture2D currentBulletSprite;
+Sound shootSfx;
 int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
@@ -52,6 +53,7 @@ static void update();
 static void draw();
 static void close();
 static void initializeButtons();
+static void initializeAudio();
 static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
 static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
@@ -101,6 +103,8 @@ void initializeGame()
 
     currentBulletSprite = LoadTexture("res/asteroid.png");
 
+    initializeAudio();
+
     initializeAsteroids(asteroids);
 
     initializeButtons();
@@ -132,7 +136,7 @@ void update()
             else
             {
                 Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
-                fireBullet(bullets, maxBullets, player.position, direction);
+                fireBullet(bullets, maxBullets, player.position, direction, shootSfx);
             }
         }
 
@@ -226,6 +230,8 @@ void close()
     UnloadTexture(player.sprite);
     UnloadTexture(aSprite);
     UnloadTexture(currentBulletSprite);
+    UnloadSound(shootSfx);
+    CloseAudioDevice();
     CloseWindow();
 }
 
@@ -242,6 +248,12 @@ void initializeButtons()
     resumeButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Resume");
     pauseButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Pause");
     backToMenuButton = createButton({ backToMenuX, pauseY }, { 100, 50 }, "Menu");
+}
+
+void initializeAudio()
+{
+    InitAudioDevice();
+    shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
 }
 
 void initializeBulletArray(Bullet bulletsArray[], int arraySize)

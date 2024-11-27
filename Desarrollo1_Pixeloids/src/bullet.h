@@ -18,7 +18,7 @@ struct Bullet
     float speed;
 };
 
-void fireBullet(Bullet bullets[], int size, Vector2 position, Vector2 direction);
+void fireBullet(Bullet bullets[], int size, Vector2 position, Vector2 direction, Sound bulletSound);
 
 void updateBullet(Bullet& bullet);
 

@@ -5,7 +5,7 @@ namespace pixeloids_luchelli
 {
 
 
-void fireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direction)
+void fireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direction, Sound bulletSound)
 {
     for (int i = 0; i < arraySize; i++)
     {
@@ -14,6 +14,9 @@ void fireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direc
             bullets[i].position = position;
             bullets[i].velocity = Vector2Scale(Vector2Normalize(direction), bullets[i].speed);
             bullets[i].active = true;
+            SetSoundVolume(bulletSound, 0.2f);
+            PlaySound(bulletSound);
+
             break;
         }
     }
