@@ -48,9 +48,7 @@ int playerCurrentLives = playerMaxLives;
 
 
 static void update();
-
 static void draw();
-
 static void close();
 
 static void initializeGame();
@@ -61,7 +59,6 @@ static void initializeAsteroids(Asteroid asteroidsArray[]);
 
 static void updateGame();
 static void updateAsteroids(Asteroid asteroidsArray[]);
-
 static void updatePause();
 static void updateGameOver();
 
@@ -70,7 +67,6 @@ static void drawGameplayBackground();
 static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
 static void drawPlayerLives(int lives);
 static void drawScore(int score);
-
 static void drawPause();
 static void drawGameOver();
 
@@ -188,36 +184,6 @@ void draw()
     }
 
     EndDrawing();
-}
-
-void drawGameOver()
-{
-    DrawText("Game Over", 350, 250, 20, WHITE);
-    drawButton(backToMenuButton);
-    drawButton(exitButton);
-}
-
-void drawPause()
-{
-    DrawText("Paused", GetScreenWidth() / 2, (GetScreenHeight() / 5) * 2, 20, WHITE);
-    drawButton(resumeButton);
-    drawButton(backToMenuButton);
-}
-
-void drawGame()
-{
-    drawGameplayBackground();
-
-    for (int i = 0; i < maxBullets; i++)
-    {
-        drawBullet(bullets[i], currentBulletSprite);
-    }
-
-    drawPlayer(player);
-    drawAsteroids(asteroids, aSprite);
-    drawButton(pauseButton);
-    drawPlayerLives(playerCurrentLives);
-    drawScore(playerScore);
 }
 
 void close()
@@ -358,6 +324,13 @@ void updateGame()
     handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
 }
 
+void updateAsteroids(Asteroid asteroidsArray[])
+{
+    for (int i = 0; i < totalAsteroids; i++)
+    {
+        UpdateAsteroid(asteroidsArray[i]);
+    }
+}
 
 void updatePause()
 {
@@ -387,14 +360,21 @@ void updateGameOver()
         gameState.nextState = GameStates::EXIT;
 }
 
-void updateAsteroids(Asteroid asteroidsArray[])
+void drawGame()
 {
-    for (int i = 0; i < totalAsteroids; i++) 
-    {
-        UpdateAsteroid(asteroidsArray[i]);
-    }
-}
+    drawGameplayBackground();
 
+    for (int i = 0; i < maxBullets; i++)
+    {
+        drawBullet(bullets[i], currentBulletSprite);
+    }
+
+    drawPlayer(player);
+    drawAsteroids(asteroids, aSprite);
+    drawButton(pauseButton);
+    drawPlayerLives(playerCurrentLives);
+    drawScore(playerScore);
+}
 
 void drawGameplayBackground()
 {
@@ -430,6 +410,21 @@ void drawScore(int score)
 
     // Puedes usar el tamaño y color que prefieras
     DrawText(TextFormat("Score: %d", score), static_cast<int>(position.x), static_cast<int>(position.y), 20, WHITE);
+}
+
+
+void drawPause()
+{
+    DrawText("Paused", GetScreenWidth() / 2, (GetScreenHeight() / 5) * 2, 20, WHITE);
+    drawButton(resumeButton);
+    drawButton(backToMenuButton);
+}
+
+void drawGameOver()
+{
+    DrawText("Game Over", 350, 250, 20, WHITE);
+    drawButton(backToMenuButton);
+    drawButton(exitButton);
 }
 
 void handleBulletAsteroidCollisions(Bullet bulletsArray[], Asteroid asteroidsArray[], int& asteroidCount)
