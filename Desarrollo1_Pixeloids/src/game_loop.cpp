@@ -19,14 +19,16 @@ enum class Borders {
     BOTTOM
 };
 
-const int playerMaxLives = 3;
+const int playerMaxLives = 30;
 const int maxBullets = 100;
-const int totalAsteroids = 100;
+const int maxAsteroids = 100;
 const int lifeTextSize = 20;
 const float asteroidStartSpeed = 100.0f;
+const float asteroidSpawnInterval = 5.0f;
+
 Player player;
 Bullet bullets[maxBullets];
-Asteroid asteroids[totalAsteroids];
+Asteroid asteroids[maxAsteroids];
 GameStateMachine gameState{};
 Button backToMenuButton;
 static Button  resumeButton, exitButton,  pauseButton;
@@ -41,6 +43,7 @@ Sound buttonSfx;
 Music mainMenuMusic;
 Music gameplayMusic;
 
+float asteroidSpawnTimer = 0.0f;
 int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
@@ -73,6 +76,7 @@ static void drawGameOver();
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
 static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
+void SpawnAsteroid(int& asteroidCount);
 
 
 void runGame() 
@@ -292,20 +296,27 @@ void updateGame()
     }
 
     // Asteroids update
-    updateAsteroids(asteroids);
+    asteroidSpawnTimer += GetFrameTime();
 
-    // Collision check
+    if (asteroidSpawnTimer >= asteroidSpawnInterval)
+    {
+        SpawnAsteroid(activeAsteroidCount);
+        asteroidSpawnTimer = 0.0f;
+    }
+
+    for (int i = 0; i < maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids; i++)
+    {
+        if (asteroids[i].active)
+        {
+            UpdateAsteroid(asteroids[i]);
+        }
+    }
+
     handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
     handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
 }
 
-void updateAsteroids(Asteroid asteroidsArray[])
-{
-    for (int i = 0; i < totalAsteroids; i++)
-    {
-        UpdateAsteroid(asteroidsArray[i]);
-    }
-}
+
 
 void updatePause()
 {
@@ -362,7 +373,7 @@ void drawGameplayBackground()
 
 void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite)
 {
-    for (int i = 0; i < totalAsteroids; i++) 
+    for (int i = 0; i < maxAsteroids; i++) 
     {
         DrawAsteroid(asteroidsArray[i], asteroidSprite);
     }
@@ -490,6 +501,22 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
         velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))),
                      -asteroidStartSpeed };
         break;
+    }
+}
+
+void SpawnAsteroid(int& asteroidCount)
+{
+    for (int i = 0; i < maxAsteroids; i++)
+    {
+        if (!asteroids[i].active)
+        {
+            Vector2 position = {};
+            Vector2 velocity = {};
+            getRandomPosAndVelocity(position,velocity);
+            InitializeAsteroid(asteroids[i], position, velocity, AsteroidSize::LARGE);
+            asteroidCount++;
+            break;
+        }
     }
 }
 
