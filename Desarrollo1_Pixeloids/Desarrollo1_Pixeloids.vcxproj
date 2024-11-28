@@ -26,6 +26,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\main_menu.cpp" />
     <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\state_machine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\asteroid.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="src\game_loop.h" />
     <ClInclude Include="src\main_menu.h" />
     <ClInclude Include="src\player.h" />
+    <ClInclude Include="src\state_machine.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
