@@ -9,7 +9,7 @@ namespace pixeloids_luchelli
         Button button;
         button.rect = { position.x, position.y, size.x, size.y };
         button.text = text;
-        button.color = LIGHTGRAY;
+        button.color = WHITE;
         return button;
     }
 
