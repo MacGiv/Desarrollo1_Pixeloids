@@ -70,10 +70,10 @@ void DrawAsteroid(Asteroid& asteroid, Texture2D& asteroidSprite)
     }
 }
 
-void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount, int& score) 
+void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount, int& score, Sound asteroidDestroySfx)
 {
-
     asteroid.active = false;
+    PlaySound(asteroidDestroySfx);
     asteroidCount--;
     score += 10;
     int maxAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
