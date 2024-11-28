@@ -42,6 +42,7 @@ Texture2D aSprite;
 Texture2D currentBulletSprite;
 Sound shootSfx;
 Sound asteroidDestroySfx;
+Sound defeatSfx;
 Music mainMenuMusic;
 
 int activeAsteroidCount = 0;
@@ -239,6 +240,7 @@ void close()
     UnloadTexture(currentBulletSprite);
     UnloadSound(shootSfx);
     UnloadSound(asteroidDestroySfx);
+    UnloadSound(defeatSfx);
     UnloadMusicStream(mainMenuMusic);
     CloseAudioDevice();
     CloseWindow();
@@ -466,6 +468,7 @@ void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[]
                 PlaySound(asteroidDestroySfx);
                 if (playerCurrentLives <= 0)
                 {
+                    //PlaySound(defeatSfx);
                     gameState.nextState = GameStates::GAME_OVER;
                 }
                 break; 
