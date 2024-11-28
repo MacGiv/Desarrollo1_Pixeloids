@@ -40,6 +40,7 @@ Asteroid asteroids[totalAsteroids];
 GameStateMachine gameState{};
 Texture2D aSprite;
 Texture2D currentBulletSprite;
+Texture2D backgroundImage;
 Sound shootSfx;
 Sound asteroidDestroySfx;
 Sound defeatSfx;
@@ -67,6 +68,7 @@ static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
 static void drawMenu();
+static void drawGameplayBackground();
 static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
 static void drawPlayerLives(int lives);
 static void drawScore(int score);
@@ -106,6 +108,7 @@ void initializeGame()
 
     initializeBulletArray(bullets, maxBullets);
 
+    backgroundImage = LoadTexture("res/background_image.png");
     aSprite = LoadTexture("res/asteroid.png");
     currentBulletSprite = LoadTexture("res/asteroid.png");
 
@@ -215,6 +218,8 @@ void draw()
         drawMenu();
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
+        drawGameplayBackground();
+
         for (int i = 0; i < maxBullets; i++)
         {
             drawBullet(bullets[i], currentBulletSprite);
@@ -254,6 +259,7 @@ void close()
     UnloadTexture(player.sprite);
     UnloadTexture(aSprite);
     UnloadTexture(currentBulletSprite);
+    UnloadTexture(backgroundImage);
     UnloadSound(shootSfx);
     UnloadSound(asteroidDestroySfx);
     UnloadSound(defeatSfx);
@@ -415,6 +421,15 @@ void drawCredits()
     DrawText(title, titleX, titleY, titleSize, ORANGE);
     DrawText(credits, creditsX, creditsY, normalTextSize, WHITE);
     DrawText(returnText, returnTextX, returnTextY, normalTextSize, GRAY);
+}
+
+void drawGameplayBackground()
+{
+    Rectangle sourceRect = { 0.0f, 0.0f, static_cast<float>(backgroundImage.width), static_cast<float>(backgroundImage.height) };
+    Rectangle destRect = { 0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight()) };
+    Vector2 origin = { 0.0f, 0.0f }; 
+
+    DrawTexturePro(backgroundImage, sourceRect, destRect, origin, 0.0f, DARKGRAY);
 }
 
 void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite)
