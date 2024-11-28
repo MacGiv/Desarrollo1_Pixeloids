@@ -199,7 +199,7 @@ void update()
             gameState.nextState = GameStates::EXIT;
         break;
     case pixeloids_luchelli::GameStates::CREDITS:
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        if (isButtonClicked(backToMenuButton))
         {
             PlaySound(buttonSfx);
             gameState.nextState = GameStates::MENU;
@@ -465,24 +465,28 @@ void drawCredits()
 {
     ClearBackground(BLACK);
 
+
     int titleSize = 60;
     int normalTextSize = 30;
+    int spacing = normalTextSize + 25;
 
     const char* title = "Credits";
     int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
-    int titleY = (screenHeight / 5) * 1;
+    int titleY = screenHeight / 8;
+    DrawText(title, titleX, titleY, titleSize, ORANGE);
 
     const char* credits = "Made by Tomas Francisco Luchelli";
     int creditsX = screenWidth / 2 - MeasureText(credits, normalTextSize) / 2;
-    int creditsY = (screenHeight / 5) * 3;
-
-    const char* returnText = "Press Mouse Button to Return";
-    int returnTextX = screenWidth / 2 - MeasureText(returnText, normalTextSize) / 2;
-    int returnTextY = (screenHeight / 5) * 4;
-
-    DrawText(title, titleX, titleY, titleSize, ORANGE);
+    int creditsY = titleY + titleSize + spacing * 4;
     DrawText(credits, creditsX, creditsY, normalTextSize, WHITE);
-    DrawText(returnText, returnTextX, returnTextY, normalTextSize, GRAY);
+
+    //const char* returnText = "Press Mouse Button to Return";
+    //int returnTextX = screenWidth / 2 - MeasureText(returnText, normalTextSize) / /2;
+    //int returnTextY = creditsY + spacing * 2;
+    //DrawText(returnText, returnTextX, returnTextY, normalTextSize, GRAY);
+
+
+    drawButton(backToMenuButton);
 }
 
 void drawGameplayBackground()
