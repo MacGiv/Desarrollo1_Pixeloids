@@ -37,14 +37,14 @@ void updateBullet(Bullet& bullet)
     }
 }
 
-void drawBullet(Bullet bullet, Texture2D texture)
+void drawBullet(Bullet bullet, Texture2D texture, float bulletRotation)
 {
     if (bullet.active) 
     {
         DrawCircleV(bullet.position, bullet.radius, YELLOW);
 
         Rectangle sourceRect = { 0.0f, 0.0f, 64.0f, 64.0f };
-        Rectangle destRect = { bullet.position.x - bullet.radius * 2, bullet.position.y - bullet.radius * 2,
+        Rectangle destRect = { bullet.position.x, bullet.position.y,
                                bullet.radius * 4, bullet.radius * 4 };
         Vector2 origin = { 0.0f, 0.0f };
 
@@ -53,8 +53,8 @@ void drawBullet(Bullet bullet, Texture2D texture)
             sourceRect,
             destRect,
             origin,
-            0,  // 0 Rotation
-            WHITE
+            bulletRotation,
+            GREEN
         );
 
     }
@@ -62,4 +62,4 @@ void drawBullet(Bullet bullet, Texture2D texture)
 
 
 
-}
+} // namespace pixeloids_luchelli

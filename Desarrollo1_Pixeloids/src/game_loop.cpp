@@ -70,9 +70,9 @@ static void drawScore(int score);
 static void drawPause();
 static void drawGameOver();
 
-static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
+static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 
 
 void runGame() 
@@ -259,31 +259,6 @@ void initializeAsteroids(Asteroid asteroidsArray[])
 
 }
 
-void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
-{
-    // Borders (0 = left, 1 = right, 2 = top, 3 = bottom)
-    int border = GetRandomValue(static_cast<int>(Borders::LEFT), static_cast<int>(Borders::BOTTOM));
-    switch (static_cast<Borders>(border))
-    {
-    case Borders::LEFT: // Left border
-        position = { 0, static_cast<float>(GetRandomValue(0, GetScreenHeight())) };
-        velocity = { asteroidStartSpeed, static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
-        break;
-    case Borders::RIGHT: // Right border
-        position = { static_cast<float>(GetScreenWidth()), static_cast<float>(GetRandomValue(0, GetScreenHeight())) };
-        velocity = { -asteroidStartSpeed, static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
-        break;
-    case Borders::TOP: // Top border
-        position = { static_cast<float>(GetRandomValue(0, GetScreenWidth())), 0 };
-        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))), asteroidStartSpeed };
-        break;
-    case Borders::BOTTOM: // Bottom border
-        position = { static_cast<float>(GetRandomValue(0, GetScreenWidth())), static_cast<float>(GetScreenHeight()) };
-        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))), -asteroidStartSpeed };
-        break;
-    }
-}
-
 void updateGame()
 {
     if (gameState.currentState != gameState.nextState)
@@ -366,7 +341,7 @@ void drawGame()
 
     for (int i = 0; i < maxBullets; i++)
     {
-        drawBullet(bullets[i], currentBulletSprite);
+        drawBullet(bullets[i], currentBulletSprite, player.rotation);
     }
 
     drawPlayer(player);
@@ -488,6 +463,31 @@ void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[]
                 break; 
             }
         }
+    }
+}
+
+void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
+{
+    // Borders (0 = left, 1 = right, 2 = top, 3 = bottom)
+    int border = GetRandomValue(static_cast<int>(Borders::LEFT), static_cast<int>(Borders::BOTTOM));
+    switch (static_cast<Borders>(border))
+    {
+    case Borders::LEFT: // Left border
+        position = { 0, static_cast<float>(GetRandomValue(0, GetScreenHeight())) };
+        velocity = { asteroidStartSpeed, static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
+        break;
+    case Borders::RIGHT: // Right border
+        position = { static_cast<float>(GetScreenWidth()), static_cast<float>(GetRandomValue(0, GetScreenHeight())) };
+        velocity = { -asteroidStartSpeed, static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
+        break;
+    case Borders::TOP: // Top border
+        position = { static_cast<float>(GetRandomValue(0, GetScreenWidth())), 0 };
+        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))), asteroidStartSpeed };
+        break;
+    case Borders::BOTTOM: // Bottom border
+        position = { static_cast<float>(GetRandomValue(0, GetScreenWidth())), static_cast<float>(GetScreenHeight()) };
+        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))), -asteroidStartSpeed };
+        break;
     }
 }
 

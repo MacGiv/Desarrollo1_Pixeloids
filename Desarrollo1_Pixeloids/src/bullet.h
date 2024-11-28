@@ -22,7 +22,7 @@ void fireBullet(Bullet bullets[], int size, Vector2 position, Vector2 direction,
 
 void updateBullet(Bullet& bullet);
 
-void drawBullet(Bullet bullet, Texture2D texture);
+void drawBullet(Bullet bullet, Texture2D texture, float bulletRotation);
 
 #endif
 

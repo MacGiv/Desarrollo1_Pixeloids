@@ -18,7 +18,7 @@ Button createButton(Vector2 position, Vector2 size, const char* text);
 void drawButton(Button& button);
 bool isButtonClicked(Button& button);
 
-}
+} // namespace pixeloids_luchelli
 
-#endif 
+#endif // BUTTON_H
 
