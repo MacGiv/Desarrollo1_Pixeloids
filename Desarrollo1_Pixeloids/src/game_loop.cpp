@@ -43,6 +43,7 @@ Texture2D currentBulletSprite;
 Sound shootSfx;
 Sound asteroidDestroySfx;
 Sound defeatSfx;
+Sound buttonSfx;
 Music mainMenuMusic;
 Music gameplayMusic;
 
@@ -54,10 +55,10 @@ int playerCurrentLives = playerMaxLives;
 
 static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton, pauseButton;
 
-static void initializeGame();
 static void update();
 static void draw();
 static void close();
+static void initializeGame();
 static void initializeButtons();
 static void initializeAudio();
 static void initializeBulletArray(Bullet bullets[], int arraySize);
@@ -66,10 +67,10 @@ static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
 static void drawMenu();
-static void drawCredits();
 static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
 static void drawPlayerLives(int lives);
 static void drawScore(int score);
+static void drawCredits();
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
 
@@ -106,7 +107,6 @@ void initializeGame()
     initializeBulletArray(bullets, maxBullets);
 
     aSprite = LoadTexture("res/asteroid.png");
-
     currentBulletSprite = LoadTexture("res/asteroid.png");
 
     initializeAudio();
@@ -145,6 +145,7 @@ void update()
             if (isButtonClicked(pauseButton))
             {
                 gameState.nextState = GameStates::PAUSED;
+                PlaySound(buttonSfx);
             }
             else
             {
@@ -162,10 +163,14 @@ void update()
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
         if (isButtonClicked(resumeButton))
+        {
             gameState.nextState = GameStates::PLAYING;
+            PlaySound(buttonSfx);
+        }
 
         if (isButtonClicked(backToMenuButton))
         {
+            PlaySound(buttonSfx);
             gameState.nextState = GameStates::MENU;
             PlayMusicStream(mainMenuMusic);
         }
@@ -173,6 +178,7 @@ void update()
     case pixeloids_luchelli::GameStates::GAME_OVER:
         if (isButtonClicked(backToMenuButton))
         {
+            PlaySound(buttonSfx);
             gameState.nextState = GameStates::MENU;
             initializeGame();
         }
@@ -182,6 +188,7 @@ void update()
     case pixeloids_luchelli::GameStates::CREDITS:
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
+            PlaySound(buttonSfx);
             gameState.nextState = GameStates::MENU;
             PlayMusicStream(mainMenuMusic);
         }
@@ -197,7 +204,7 @@ void update()
 }
 
 
-void draw() 
+void draw()
 {
     BeginDrawing();
     ClearBackground(BLACK);
@@ -250,6 +257,7 @@ void close()
     UnloadSound(shootSfx);
     UnloadSound(asteroidDestroySfx);
     UnloadSound(defeatSfx);
+    UnloadSound(buttonSfx);
     UnloadMusicStream(mainMenuMusic);
     UnloadMusicStream(gameplayMusic);
     CloseAudioDevice();
@@ -277,9 +285,13 @@ void initializeAudio()
     {
         InitAudioDevice();
     }
+
     mainMenuMusic = LoadMusicStream("res/main_menu_music.mp3");
+    SetMusicVolume(mainMenuMusic, 0.75f);
     gameplayMusic = LoadMusicStream("res/gameplay_music.mp3");
     SetMusicVolume(gameplayMusic, 0.75f);
+    buttonSfx = LoadSound("res/button_press_sfx.mp3");
+    SetSoundVolume(buttonSfx, 0.75f);
     shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
     asteroidDestroySfx = LoadSound("res/asteroid_explosion_sfx.mp3");
     SetSoundVolume(asteroidDestroySfx, 0.2f);
@@ -344,17 +356,20 @@ void updateMenu()
 
     if (isButtonClicked(playButton))
     {
+        PlaySound(buttonSfx);
         StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::PLAYING;
         PlayMusicStream(gameplayMusic);
     }
     if (isButtonClicked(exitButton))
     {
+        PlaySound(buttonSfx);
         StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::EXIT;
     }
     if (isButtonClicked(creditsButton))
     {
+        PlaySound(buttonSfx);
         StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::CREDITS;
     }
