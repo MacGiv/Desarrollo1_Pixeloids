@@ -19,7 +19,6 @@ enum class Borders {
     BOTTOM
 };
 
-
 const int playerMaxLives = 3;
 const int maxBullets = 100;
 const int totalAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
@@ -29,6 +28,9 @@ Player player;
 Bullet bullets[maxBullets];
 Asteroid asteroids[totalAsteroids];
 GameStateMachine gameState{};
+Button backToMenuButton;
+static Button  resumeButton, exitButton,  pauseButton;
+
 Texture2D aSprite;
 Texture2D currentBulletSprite;
 Texture2D backgroundImage;
@@ -39,14 +41,11 @@ Sound buttonSfx;
 Music mainMenuMusic;
 Music gameplayMusic;
 
-
 int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCurrentLives = playerMaxLives;
 
-static Button  resumeButton, exitButton,  pauseButton;
-Button backToMenuButton;
 
 static void update();
 
