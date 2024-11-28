@@ -2,10 +2,12 @@
 #include "player.h"
 #include "game_data.h"
 #include "bullet.h"
-#include "raymath.h"
 #include "asteroid.h"
 #include "button.h"
+#include "main_menu.h"
 #include "state_machine.h"
+
+#include "raymath.h"
 
 namespace pixeloids_luchelli
 {
@@ -43,29 +45,39 @@ int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCurrentLives = playerMaxLives;
 
-static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton, pauseButton, howToPlayButton;
+static Button  resumeButton, exitButton,  pauseButton;
+Button backToMenuButton;
 
 static void update();
+
 static void draw();
+
 static void close();
+
 static void initializeGame();
-static void initializeButtons();
+static void initializeGameButtons();
 static void initializeAudio();
 static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
-static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
-static void updateMenu();
+
+static void updateGame();
 static void updateAsteroids(Asteroid asteroidsArray[]);
-static void drawMenu();
-static void drawHowToPlay();
+
+static void updatePause();
+static void updateGameOver();
+
+static void drawGame();
 static void drawGameplayBackground();
 static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
 static void drawPlayerLives(int lives);
 static void drawScore(int score);
-static void drawCredits();
+
+static void drawPause();
+static void drawGameOver();
+
+static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
-
 
 
 void runGame() 
@@ -106,7 +118,9 @@ void initializeGame()
 
     initializeAsteroids(asteroids);
 
-    initializeButtons();
+    initializeMenuButtons();
+
+    initializeGameButtons();
 }
 
 void update() 
@@ -117,82 +131,19 @@ void update()
         updateMenu();
         break;
     case pixeloids_luchelli::GameStates::HOW_TO_PLAY:
-        if (isButtonClicked(backToMenuButton))
-        {
-            PlaySound(buttonSfx);
-            PlayMusicStream(mainMenuMusic);
-            gameState.nextState = GameStates::MENU;
-        }
+        updateHowToPlay();
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
-        if (gameState.currentState != gameState.nextState)
-        {
-            StopMusicStream(mainMenuMusic);
-            PlayMusicStream(gameplayMusic);
-        }
-
-        UpdateMusicStream(gameplayMusic);
-        updatePlayer(player);
-
-        // Bullet Update
-        for (int i = 0; i < maxBullets; i++)
-        {
-            updateBullet(bullets[i]);
-        }
-
-        // Shoot update
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            if (isButtonClicked(pauseButton))
-            {
-                gameState.nextState = GameStates::PAUSED;
-                PlaySound(buttonSfx);
-            }
-            else
-            {
-                Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
-                fireBullet(bullets, maxBullets, player.position, direction, shootSfx);
-            }
-        }
-
-        // Asteroids update
-        updateAsteroids(asteroids);
-
-        // Collision check
-        handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
-        handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
+        updateGame();
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
-        if (isButtonClicked(resumeButton))
-        {
-            gameState.nextState = GameStates::PLAYING;
-            PlaySound(buttonSfx);
-        }
-
-        if (isButtonClicked(backToMenuButton))
-        {
-            PlaySound(buttonSfx);
-            gameState.nextState = GameStates::MENU;
-            PlayMusicStream(mainMenuMusic);
-        }
+        updatePause();
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
-        if (isButtonClicked(backToMenuButton))
-        {
-            PlaySound(buttonSfx);
-            gameState.nextState = GameStates::MENU;
-            initializeGame();
-        }
-        if (isButtonClicked(exitButton))
-            gameState.nextState = GameStates::EXIT;
+        updateGameOver();
         break;
     case pixeloids_luchelli::GameStates::CREDITS:
-        if (isButtonClicked(backToMenuButton))
-        {
-            PlaySound(buttonSfx);
-            gameState.nextState = GameStates::MENU;
-            PlayMusicStream(mainMenuMusic);
-        }
+        updateCredits();
         break;
     case pixeloids_luchelli::GameStates::EXIT:
         close();
@@ -219,28 +170,13 @@ void draw()
         drawHowToPlay();
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
-        drawGameplayBackground();
-
-        for (int i = 0; i < maxBullets; i++)
-        {
-            drawBullet(bullets[i], currentBulletSprite);
-        }
-
-        drawPlayer(player);
-        drawAsteroids(asteroids, aSprite);
-        drawButton(pauseButton);
-        drawPlayerLives(playerCurrentLives);
-        drawScore(playerScore);
+        drawGame();
         break;
     case pixeloids_luchelli::GameStates::PAUSED:
-        DrawText("Paused", GetScreenWidth() / 2, (GetScreenHeight() / 5) * 2, 20, WHITE);
-        drawButton(resumeButton);
-        drawButton(backToMenuButton);
+        drawPause();
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
-        DrawText("Game Over", 350, 250, 20, WHITE);
-        drawButton(backToMenuButton);
-        drawButton(exitButton);
+        drawGameOver();
         break;
     case pixeloids_luchelli::GameStates::CREDITS:
         drawCredits();
@@ -253,6 +189,36 @@ void draw()
     }
 
     EndDrawing();
+}
+
+void drawGameOver()
+{
+    DrawText("Game Over", 350, 250, 20, WHITE);
+    drawButton(backToMenuButton);
+    drawButton(exitButton);
+}
+
+void drawPause()
+{
+    DrawText("Paused", GetScreenWidth() / 2, (GetScreenHeight() / 5) * 2, 20, WHITE);
+    drawButton(resumeButton);
+    drawButton(backToMenuButton);
+}
+
+void drawGame()
+{
+    drawGameplayBackground();
+
+    for (int i = 0; i < maxBullets; i++)
+    {
+        drawBullet(bullets[i], currentBulletSprite);
+    }
+
+    drawPlayer(player);
+    drawAsteroids(asteroids, aSprite);
+    drawButton(pauseButton);
+    drawPlayerLives(playerCurrentLives);
+    drawScore(playerScore);
 }
 
 void close()
@@ -272,13 +238,8 @@ void close()
 }
 
 
-void initializeButtons() 
+void initializeGameButtons() 
 {
-    playButton = createButton({ 100, 100 }, { 150, 50 }, "Play");
-    creditsButton = createButton({ 100, 300 }, { 150, 50 }, "Credits");
-    howToPlayButton = createButton({ 100, 500 }, { 150, 50 }, "How To Play");
-    exitButton = createButton({ 100, 700 }, { 150, 50 }, "Exit");
-
     float backToMenuX = (screenWidth / 16);
     float pauseX = (screenWidth / 16) * 14;
     float pauseY = (screenHeight / 8) * 7;
@@ -358,35 +319,73 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
     }
 }
 
-void updateMenu()
+void updateGame()
 {
-    UpdateMusicStream(mainMenuMusic);
-
-    if (isButtonClicked(playButton))
+    if (gameState.currentState != gameState.nextState)
     {
-        PlaySound(buttonSfx);
         StopMusicStream(mainMenuMusic);
-        gameState.nextState = GameStates::PLAYING;
         PlayMusicStream(gameplayMusic);
     }
+
+    UpdateMusicStream(gameplayMusic);
+    updatePlayer(player);
+
+    // Bullet Update
+    for (int i = 0; i < maxBullets; i++)
+    {
+        updateBullet(bullets[i]);
+    }
+
+    // Shoot update
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        if (isButtonClicked(pauseButton))
+        {
+            gameState.nextState = GameStates::PAUSED;
+            PlaySound(buttonSfx);
+        }
+        else
+        {
+            Vector2 direction = Vector2Subtract(GetMousePosition(), player.position);
+            fireBullet(bullets, maxBullets, player.position, direction, shootSfx);
+        }
+    }
+
+    // Asteroids update
+    updateAsteroids(asteroids);
+
+    // Collision check
+    handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
+    handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
+}
+
+
+void updatePause()
+{
+    if (isButtonClicked(resumeButton))
+    {
+        gameState.nextState = GameStates::PLAYING;
+        PlaySound(buttonSfx);
+    }
+
+    if (isButtonClicked(backToMenuButton))
+    {
+        PlaySound(buttonSfx);
+        gameState.nextState = GameStates::MENU;
+        PlayMusicStream(mainMenuMusic);
+    }
+}
+
+void updateGameOver()
+{
+    if (isButtonClicked(backToMenuButton))
+    {
+        PlaySound(buttonSfx);
+        gameState.nextState = GameStates::MENU;
+        initializeGame();
+    }
     if (isButtonClicked(exitButton))
-    {
-        PlaySound(buttonSfx);
-        StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::EXIT;
-    }
-    if (isButtonClicked(creditsButton))
-    {
-        PlaySound(buttonSfx);
-        StopMusicStream(mainMenuMusic);
-        gameState.nextState = GameStates::CREDITS;
-    }
-    if (isButtonClicked(howToPlayButton))
-    {
-        PlaySound(buttonSfx);
-        StopMusicStream(mainMenuMusic);
-        gameState.nextState = GameStates::HOW_TO_PLAY;
-    }
 }
 
 void updateAsteroids(Asteroid asteroidsArray[])
@@ -397,85 +396,6 @@ void updateAsteroids(Asteroid asteroidsArray[])
     }
 }
 
-void drawMenu()
-{
-    Vector2 titlePosition = { (static_cast<float>(GetScreenWidth()) - MeasureText("PIXELOIDS", 40)) / 2.0f, 50.0f };
-    DrawText("PIXELOIDS", static_cast<int>(titlePosition.x), static_cast<int>(titlePosition.y), 40, ORANGE);
-    
-    drawButton(playButton);
-    drawButton(creditsButton);
-    drawButton(howToPlayButton);
-    drawButton(exitButton);
-}
-
-void drawHowToPlay()
-{
-    ClearBackground(BLACK);
-
-    const char* title = "How to Play";
-    int titleSize = 60;
-    int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
-    int titleY = (screenHeight / 8);
-    DrawText(title, titleX, titleY, titleSize, ORANGE);
-
-    int textSize = 30;
-    int spacing = textSize + 25;
-
-    const char* line1 = "Use the mouse to control the ship.";
-    int line1X = screenWidth / 2 - MeasureText(line1, textSize) / 2;
-    int line1Y = titleY + titleSize + spacing;
-    DrawText(line1, line1X, line1Y, textSize, WHITE);
-
-    const char* line2 = "Left click: Shoot bullets.";
-    int line2X = screenWidth / 2 - MeasureText(line2, textSize) / 2;
-    int line2Y = line1Y + spacing;
-    DrawText(line2, line2X, line2Y, textSize, WHITE);
-
-    const char* line3 = "Right click: Accelerate towards the cursor.";
-    int line3X = screenWidth / 2 - MeasureText(line3, textSize) / 2;
-    int line3Y = line2Y + spacing;
-    DrawText(line3, line3X, line3Y, textSize, WHITE);
-
-    const char* line4 = "Avoid asteroids and destroy them to gain points.";
-    int line4X = screenWidth / 2 - MeasureText(line4, textSize) / 2;
-    int line4Y = line3Y + spacing;
-    DrawText(line4, line4X, line4Y, textSize, WHITE);
-
-    const char* line5 = "Game ends when you lose all lives.";
-    int line5X = screenWidth / 2 - MeasureText(line5, textSize) / 2;
-    int line5Y = line4Y + spacing;
-    DrawText(line5, line5X, line5Y, textSize, WHITE);
-
-    drawButton(backToMenuButton);
-}
-
-void drawCredits()
-{
-    ClearBackground(BLACK);
-
-
-    int titleSize = 60;
-    int normalTextSize = 30;
-    int spacing = normalTextSize + 25;
-
-    const char* title = "Credits";
-    int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
-    int titleY = screenHeight / 8;
-    DrawText(title, titleX, titleY, titleSize, ORANGE);
-
-    const char* credits = "Made by Tomas Francisco Luchelli";
-    int creditsX = screenWidth / 2 - MeasureText(credits, normalTextSize) / 2;
-    int creditsY = titleY + titleSize + spacing * 4;
-    DrawText(credits, creditsX, creditsY, normalTextSize, WHITE);
-
-    //const char* returnText = "Press Mouse Button to Return";
-    //int returnTextX = screenWidth / 2 - MeasureText(returnText, normalTextSize) / /2;
-    //int returnTextY = creditsY + spacing * 2;
-    //DrawText(returnText, returnTextX, returnTextY, normalTextSize, GRAY);
-
-
-    drawButton(backToMenuButton);
-}
 
 void drawGameplayBackground()
 {
