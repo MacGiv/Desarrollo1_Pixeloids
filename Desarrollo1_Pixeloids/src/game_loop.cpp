@@ -5,6 +5,7 @@
 #include "raymath.h"
 #include "asteroid.h"
 #include "button.h"
+#include "state_machine.h"
 
 namespace pixeloids_luchelli
 {
@@ -15,20 +16,7 @@ enum class Borders {
     TOP,
     BOTTOM
 };
-enum class GameStates {
-    MENU,
-    HOW_TO_PLAY,
-    PLAYING,
-    PAUSED,
-    GAME_OVER,
-    CREDITS,
-    EXIT
-};
-struct GameStateMachine
-{
-    GameStates currentState;
-    GameStates nextState;
-};
+
 
 const int playerMaxLives = 3;
 const int maxBullets = 100;
