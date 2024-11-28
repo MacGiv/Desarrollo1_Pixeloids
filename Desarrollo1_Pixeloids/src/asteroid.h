@@ -26,7 +26,7 @@ void UpdateAsteroid(Asteroid& asteroid);
 
 void DrawAsteroid(Asteroid& asteroid, Texture2D& asteroidSprite);
 
-void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount, int& score);
+void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount, int& score, Sound asteroidDestroySfx);
 
 }
 

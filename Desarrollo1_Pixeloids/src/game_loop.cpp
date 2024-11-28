@@ -41,6 +41,7 @@ GameStateMachine gameState{};
 Texture2D aSprite;
 Texture2D currentBulletSprite;
 Sound shootSfx;
+Sound asteroidDestroySfx;
 Music mainMenuMusic;
 
 int activeAsteroidCount = 0;
@@ -237,6 +238,7 @@ void close()
     UnloadTexture(aSprite);
     UnloadTexture(currentBulletSprite);
     UnloadSound(shootSfx);
+    UnloadSound(asteroidDestroySfx);
     UnloadMusicStream(mainMenuMusic);
     CloseAudioDevice();
     CloseWindow();
@@ -427,7 +429,7 @@ void handleBulletAsteroidCollisions(Bullet bulletsArray[], Asteroid asteroidsArr
                     {
                         // Deactivate bullet and destroy asteroid
                         bullets[i].active = false;
-                        DestroyAsteroid(asteroidsArray[j], asteroidsArray, asteroidCount, playerScore);
+                        DestroyAsteroid(asteroidsArray[j], asteroidsArray, asteroidCount, playerScore, asteroidDestroySfx);
 
                         if (asteroidsArray[j].size == AsteroidSize::SMALL)
                         {
@@ -461,7 +463,7 @@ void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[]
             {
                 playerCurrentLives--;
                 asteroidsArray[i].active = false;
-
+                PlaySound(asteroidDestroySfx);
                 if (playerCurrentLives <= 0)
                 {
                     gameState.nextState = GameStates::GAME_OVER;
