@@ -64,7 +64,7 @@ namespace pixeloids_luchelli
     void drawMenu() 
     {
         Vector2 titlePosition = { (static_cast<float>(GetScreenWidth()) - MeasureText("PIXELOIDS", 40)) / 2.0f, 50.0f };
-        DrawText("PIXELOIDS", static_cast<int>(titlePosition.x), static_cast<int>(titlePosition.y), 40, SKYBLUE);
+        DrawText("PIXELOIDS", static_cast<int>(titlePosition.x), static_cast<int>(titlePosition.y), 40, CYAN);
 
         drawButton(playButton);
         drawButton(creditsButton);
@@ -90,7 +90,7 @@ namespace pixeloids_luchelli
         int titleSize = 60;
         int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
         int titleY = (screenHeight / 8);
-        DrawText(title, titleX, titleY, titleSize, ORANGE);
+        DrawText(title, titleX, titleY, titleSize, CYAN);
 
         int textSize = 30;
         int spacing = textSize + 25;
@@ -192,7 +192,7 @@ namespace pixeloids_luchelli
         const char* title = "Credits";
         int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
         int titleY = screenHeight / 8;
-        DrawText(title, titleX, titleY, titleSize, ORANGE);
+        DrawText(title, titleX, titleY, titleSize, CYAN);
 
         const char* line1 = "Developed by Tomas F. Luchelli";
         int line1X = screenWidth / 3 - MeasureText(line1, normalTextSize) / 2;
