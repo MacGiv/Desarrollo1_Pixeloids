@@ -61,7 +61,6 @@ static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
 
 static void updateGame();
-static void updateAsteroids(Asteroid asteroidsArray[]);
 static void updatePause();
 static void updateGameOver();
 
@@ -315,7 +314,6 @@ void updateGame()
     handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
     handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
 }
-
 
 
 void updatePause()
