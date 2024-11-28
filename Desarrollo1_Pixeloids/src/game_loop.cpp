@@ -380,10 +380,8 @@ void drawPlayerLives(int lives)
 
 void drawScore(int score)
 {
-    // Configura la posición en la esquina superior derecha
-    Vector2 position = { static_cast<float>(GetScreenWidth() - 100), 10.0f }; // Ajusta el '100' según el tamaño del texto
+    Vector2 position = { static_cast<float>(GetScreenWidth() - 100), 10.0f };
 
-    // Puedes usar el tamaño y color que prefieras
     DrawText(TextFormat("Score: %d", score), static_cast<int>(position.x), static_cast<int>(position.y), 20, WHITE);
 }
 
