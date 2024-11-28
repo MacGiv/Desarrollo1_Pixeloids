@@ -44,6 +44,8 @@ Sound shootSfx;
 Sound asteroidDestroySfx;
 Sound defeatSfx;
 Music mainMenuMusic;
+Music gameplayMusic;
+
 
 int activeAsteroidCount = 0;
 int playerScore = 0;
@@ -122,6 +124,13 @@ void update()
         updateMenu();
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
+        if (gameState.currentState != gameState.nextState)
+        {
+            StopMusicStream(mainMenuMusic);
+            PlayMusicStream(gameplayMusic);
+        }
+
+        UpdateMusicStream(gameplayMusic);
         updatePlayer(player);
 
         // Bullet Update
@@ -242,6 +251,7 @@ void close()
     UnloadSound(asteroidDestroySfx);
     UnloadSound(defeatSfx);
     UnloadMusicStream(mainMenuMusic);
+    UnloadMusicStream(gameplayMusic);
     CloseAudioDevice();
     CloseWindow();
 }
@@ -268,6 +278,8 @@ void initializeAudio()
         InitAudioDevice();
     }
     mainMenuMusic = LoadMusicStream("res/main_menu_music.mp3");
+    gameplayMusic = LoadMusicStream("res/gameplay_music.mp3");
+    SetMusicVolume(gameplayMusic, 0.75f);
     shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
     asteroidDestroySfx = LoadSound("res/asteroid_explosion_sfx.mp3");
     SetSoundVolume(asteroidDestroySfx, 0.2f);
@@ -334,6 +346,7 @@ void updateMenu()
     {
         StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::PLAYING;
+        PlayMusicStream(gameplayMusic);
     }
     if (isButtonClicked(exitButton))
     {
@@ -468,7 +481,10 @@ void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[]
                 PlaySound(asteroidDestroySfx);
                 if (playerCurrentLives <= 0)
                 {
-                    //PlaySound(defeatSfx);
+                    if (IsMusicStreamPlaying(gameplayMusic))
+                    {
+                        StopMusicStream(gameplayMusic);
+                    }
                     gameState.nextState = GameStates::GAME_OVER;
                 }
                 break; 
