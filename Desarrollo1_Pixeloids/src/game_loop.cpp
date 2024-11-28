@@ -17,6 +17,7 @@ enum class Borders {
 };
 enum class GameStates {
     MENU,
+    HOW_TO_PLAY,
     PLAYING,
     PAUSED,
     GAME_OVER,
@@ -54,7 +55,7 @@ int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCurrentLives = playerMaxLives;
 
-static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton, pauseButton;
+static Button playButton, resumeButton, exitButton, backToMenuButton, creditsButton, pauseButton, howToPlayButton;
 
 static void update();
 static void draw();
@@ -68,6 +69,7 @@ static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 static void updateMenu();
 static void updateAsteroids(Asteroid asteroidsArray[]);
 static void drawMenu();
+static void drawHowToPlay();
 static void drawGameplayBackground();
 static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
 static void drawPlayerLives(int lives);
@@ -125,6 +127,14 @@ void update()
     {
     case pixeloids_luchelli::GameStates::MENU:
         updateMenu();
+        break;
+    case pixeloids_luchelli::GameStates::HOW_TO_PLAY:
+        if (isButtonClicked(backToMenuButton))
+        {
+            PlaySound(buttonSfx);
+            PlayMusicStream(mainMenuMusic);
+            gameState.nextState = GameStates::MENU;
+        }
         break;
     case pixeloids_luchelli::GameStates::PLAYING:
         if (gameState.currentState != gameState.nextState)
@@ -217,6 +227,9 @@ void draw()
     case pixeloids_luchelli::GameStates::MENU:
         drawMenu();
         break;
+    case pixeloids_luchelli::GameStates::HOW_TO_PLAY:
+        drawHowToPlay();
+        break;
     case pixeloids_luchelli::GameStates::PLAYING:
         drawGameplayBackground();
 
@@ -275,7 +288,8 @@ void initializeButtons()
 {
     playButton = createButton({ 100, 100 }, { 150, 50 }, "Play");
     creditsButton = createButton({ 100, 300 }, { 150, 50 }, "Credits");
-    exitButton = createButton({ 100, 500 }, { 150, 50 }, "Exit");
+    howToPlayButton = createButton({ 100, 500 }, { 150, 50 }, "How To Play");
+    exitButton = createButton({ 100, 700 }, { 150, 50 }, "Exit");
 
     float backToMenuX = (screenWidth / 16);
     float pauseX = (screenWidth / 16) * 14;
@@ -379,6 +393,12 @@ void updateMenu()
         StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::CREDITS;
     }
+    if (isButtonClicked(howToPlayButton))
+    {
+        PlaySound(buttonSfx);
+        StopMusicStream(mainMenuMusic);
+        gameState.nextState = GameStates::HOW_TO_PLAY;
+    }
 }
 
 void updateAsteroids(Asteroid asteroidsArray[])
@@ -395,8 +415,50 @@ void drawMenu()
     DrawText("PIXELOIDS", static_cast<int>(titlePosition.x), static_cast<int>(titlePosition.y), 40, ORANGE);
     
     drawButton(playButton);
-    drawButton(exitButton);
     drawButton(creditsButton);
+    drawButton(howToPlayButton);
+    drawButton(exitButton);
+}
+
+void drawHowToPlay()
+{
+    ClearBackground(BLACK);
+
+    const char* title = "How to Play";
+    int titleSize = 60;
+    int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
+    int titleY = (screenHeight / 8);
+    DrawText(title, titleX, titleY, titleSize, ORANGE);
+
+    int textSize = 30;
+    int spacing = textSize + 25;
+
+    const char* line1 = "Use the mouse to control the ship.";
+    int line1X = screenWidth / 2 - MeasureText(line1, textSize) / 2;
+    int line1Y = titleY + titleSize + spacing;
+    DrawText(line1, line1X, line1Y, textSize, WHITE);
+
+    const char* line2 = "Left click: Shoot bullets.";
+    int line2X = screenWidth / 2 - MeasureText(line2, textSize) / 2;
+    int line2Y = line1Y + spacing;
+    DrawText(line2, line2X, line2Y, textSize, WHITE);
+
+    const char* line3 = "Right click: Accelerate towards the cursor.";
+    int line3X = screenWidth / 2 - MeasureText(line3, textSize) / 2;
+    int line3Y = line2Y + spacing;
+    DrawText(line3, line3X, line3Y, textSize, WHITE);
+
+    const char* line4 = "Avoid asteroids and destroy them to gain points.";
+    int line4X = screenWidth / 2 - MeasureText(line4, textSize) / 2;
+    int line4Y = line3Y + spacing;
+    DrawText(line4, line4X, line4Y, textSize, WHITE);
+
+    const char* line5 = "Game ends when you lose all lives.";
+    int line5X = screenWidth / 2 - MeasureText(line5, textSize) / 2;
+    int line5Y = line4Y + spacing;
+    DrawText(line5, line5X, line5Y, textSize, WHITE);
+
+    drawButton(backToMenuButton);
 }
 
 void drawCredits()
