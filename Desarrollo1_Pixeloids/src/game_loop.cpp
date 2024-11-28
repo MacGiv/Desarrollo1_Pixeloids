@@ -41,6 +41,8 @@ GameStateMachine gameState{};
 Texture2D aSprite;
 Texture2D currentBulletSprite;
 Sound shootSfx;
+Music mainMenuMusic;
+
 int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
@@ -152,7 +154,10 @@ void update()
             gameState.nextState = GameStates::PLAYING;
 
         if (isButtonClicked(backToMenuButton))
+        {
             gameState.nextState = GameStates::MENU;
+            PlayMusicStream(mainMenuMusic);
+        }
         break;
     case pixeloids_luchelli::GameStates::GAME_OVER:
         if (isButtonClicked(backToMenuButton))
@@ -167,6 +172,7 @@ void update()
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             gameState.nextState = GameStates::MENU;
+            PlayMusicStream(mainMenuMusic);
         }
         break;
     case pixeloids_luchelli::GameStates::EXIT:
@@ -231,6 +237,7 @@ void close()
     UnloadTexture(aSprite);
     UnloadTexture(currentBulletSprite);
     UnloadSound(shootSfx);
+    UnloadMusicStream(mainMenuMusic);
     CloseAudioDevice();
     CloseWindow();
 }
@@ -252,8 +259,17 @@ void initializeButtons()
 
 void initializeAudio()
 {
-    InitAudioDevice();
+    if (!IsAudioDeviceReady())
+    {
+        InitAudioDevice();
+    }
+    mainMenuMusic = LoadMusicStream("res/main_menu_music.mp3");
     shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
+    asteroidDestroySfx = LoadSound("res/asteroid_explosion_sfx.mp3");
+    SetSoundVolume(asteroidDestroySfx, 0.2f);
+    defeatSfx = LoadSound("res/defeat_sfx.mp3");
+    SetSoundVolume(defeatSfx, 0.3f);
+    PlayMusicStream(mainMenuMusic);
 }
 
 void initializeBulletArray(Bullet bulletsArray[], int arraySize)
@@ -308,12 +324,23 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
 
 void updateMenu()
 {
+    UpdateMusicStream(mainMenuMusic);
+
     if (isButtonClicked(playButton))
+    {
+        StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::PLAYING;
+    }
     if (isButtonClicked(exitButton))
+    {
+        StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::EXIT;
+    }
     if (isButtonClicked(creditsButton))
+    {
+        StopMusicStream(mainMenuMusic);
         gameState.nextState = GameStates::CREDITS;
+    }
 }
 
 void updateAsteroids(Asteroid asteroidsArray[])
