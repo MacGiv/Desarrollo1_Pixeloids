@@ -75,27 +75,36 @@ void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCoun
     asteroid.active = false;
     PlaySound(asteroidDestroySfx);
     asteroidCount--;
-    score += 10;
-    int maxAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
-    float rotationAngle = 30.0f;
 
-    // Create new asteroids if the one destroyed is big or med
-    if (asteroid.size == AsteroidSize::LARGE || asteroid.size == AsteroidSize::MEDIUM) 
+    switch (asteroid.size) 
+    {
+    case AsteroidSize::LARGE: score += 20; break;
+    case AsteroidSize::MEDIUM: score += 10; break;
+    case AsteroidSize::SMALL: score += 5; break;
+    }
+
+    // Crear asteroides nuevos si no es pequeño
+    if (asteroid.size == AsteroidSize::LARGE || asteroid.size == AsteroidSize::MEDIUM)
     {
         AsteroidSize newSize = (asteroid.size == AsteroidSize::LARGE) ? AsteroidSize::MEDIUM : AsteroidSize::SMALL;
-        Vector2 newVelocity1 = Vector2Rotate(asteroid.velocity, rotationAngle);
-        Vector2 newVelocity2 = Vector2Rotate(asteroid.velocity, -rotationAngle);
 
+        float rotationAngle1 = static_cast<float>(GetRandomValue(15, 45));
+        float rotationAngle2 = static_cast<float>(-GetRandomValue(15, 45));
+
+        Vector2 newVelocity1 = Vector2Rotate(asteroid.velocity, rotationAngle1);
+        Vector2 newVelocity2 = Vector2Rotate(asteroid.velocity, rotationAngle2);
+
+        int maxAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
         for (int i = 0; i < maxAsteroids; i++)
         {
-            if (!asteroids[i].active) 
+            if (!asteroids[i].active)
             {
                 InitializeAsteroid(asteroids[i], asteroid.position, newVelocity1, newSize);
                 asteroidCount++;
-                i++;
-                if (i < maxAsteroids)
+
+                if (i + 1 < maxAsteroids)
                 {
-                    InitializeAsteroid(asteroids[i], asteroid.position, newVelocity2, newSize);
+                    InitializeAsteroid(asteroids[++i], asteroid.position, newVelocity2, newSize);
                     asteroidCount++;
                 }
                 break;

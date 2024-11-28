@@ -21,9 +21,9 @@ enum class Borders {
 
 const int playerMaxLives = 3;
 const int maxBullets = 100;
-const int totalAsteroids = maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids;
+const int totalAsteroids = 100;
 const int lifeTextSize = 20;
-const float asteroidStartSpeed = 150.0f;
+const float asteroidStartSpeed = 100.0f;
 Player player;
 Bullet bullets[maxBullets];
 Asteroid asteroids[totalAsteroids];
@@ -472,19 +472,23 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
     {
     case Borders::LEFT: // Left border
         position = { 0, static_cast<float>(GetRandomValue(0, GetScreenHeight())) };
-        velocity = { asteroidStartSpeed, static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
+        velocity = { asteroidStartSpeed,
+                     static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
         break;
     case Borders::RIGHT: // Right border
         position = { static_cast<float>(GetScreenWidth()), static_cast<float>(GetRandomValue(0, GetScreenHeight())) };
-        velocity = { -asteroidStartSpeed, static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
+        velocity = { -asteroidStartSpeed,
+                     static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))) };
         break;
     case Borders::TOP: // Top border
         position = { static_cast<float>(GetRandomValue(0, GetScreenWidth())), 0 };
-        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))), asteroidStartSpeed };
+        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))),
+                     asteroidStartSpeed };
         break;
     case Borders::BOTTOM: // Bottom border
         position = { static_cast<float>(GetRandomValue(0, GetScreenWidth())), static_cast<float>(GetScreenHeight()) };
-        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))), -asteroidStartSpeed };
+        velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))),
+                     -asteroidStartSpeed };
         break;
     }
 }
