@@ -2,8 +2,8 @@
 
 
 ### Controles
-Movimiento de la nave: Click derecho
-Disparo: Click izquierdo
+- Movimiento de la nave: Click derecho
+- Disparo: Click izquierdo
 
 ### Desarrollador
 Creado por Tomás Francisco Luchelli para la asignatura "Prácticas Profesionales 1: Desarrollo 1" en ImageCampus.
