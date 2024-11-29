@@ -1,7 +1,7 @@
 #include "raylib.h"
 
-#ifndef ASTEROID
-#define ASTEROID
+#ifndef ASTEROID_H
+#define ASTEROID_H
 
 namespace pixeloids_luchelli 
 {
@@ -28,6 +28,6 @@ void DrawAsteroid(Asteroid& asteroid, Texture2D& asteroidSprite);
 
 void DestroyAsteroid(Asteroid& asteroid, Asteroid asteroids[], int& asteroidCount, int& score, Sound asteroidDestroySfx);
 
-}
+} // namespace pixeloids_luchelli 
 
-#endif
+#endif // ASTEROID_H

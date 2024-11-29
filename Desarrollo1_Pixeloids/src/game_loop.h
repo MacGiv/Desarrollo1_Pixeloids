@@ -10,4 +10,4 @@ void runGame();
 
 } // namespace pixeloids_luchelli
 
-#endif
+#endif // GAME_LOOP

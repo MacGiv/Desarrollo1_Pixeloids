@@ -15,7 +15,7 @@ namespace pixeloids_luchelli
 
 } // namespace pixeloids_luchelli
 
-#endif // !MAIN_MENU_H
+#endif // MAIN_MENU_H
 
 
 

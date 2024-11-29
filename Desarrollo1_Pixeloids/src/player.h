@@ -26,6 +26,6 @@ void drawPlayer(Player& player);
 
 void activateShield(Player& player);
 
-}
+} // namespace pixeloids_luchelli
 
-#endif
+#endif // PLAYER_H

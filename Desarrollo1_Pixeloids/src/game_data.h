@@ -11,6 +11,6 @@ const Color PINK_MINE = { 206, 113, 212, 255 };
 const int screenWidth = 1024;
 const int screenHeight = 768;
 
-}
+} // namespace pixeloids_luchelli
 
-#endif
+#endif // GAME_DATA

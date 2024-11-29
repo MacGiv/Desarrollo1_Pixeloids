@@ -5,7 +5,8 @@
 #include "game_data.h"
 #include "state_machine.h"
 
-#include "raymath.h"
+#include "raymath.h"  // Si lo ponia entre #include "main_menu.h" y 
+                      // #include "button.h" generaba errores, por eso esta aca.
 
 namespace pixeloids_luchelli 
 {
@@ -20,7 +21,7 @@ namespace pixeloids_luchelli
     extern Font titleFont;
 
     static Button playButton, creditsButton, howToPlayButton, quitButton;
-    static Button button1, button2, button3, button4, button5, button6;
+    static Button button1, button2, button3, button4, button5, button6, button7;
     static Texture2D menuBackground;
     static Texture2D menuOthersBackground;
 
@@ -164,7 +165,7 @@ namespace pixeloids_luchelli
         const float buttonHeight = 50.0f;
         const float buttonSpacing = 45.0f;
         const float posX = (screenWidth / 5) * 4 - buttonWidth / 2;
-        const float startY = 200.0f;
+        const float startY = 100.0f;
 
         button1 = createButton({ posX, startY }, { buttonWidth, buttonHeight }, "Itch.io", PINK_MINE);
         button2 = createButton({ posX, startY + buttonHeight + buttonSpacing }, { buttonWidth, buttonHeight }, "GitHub", PINK_MINE);
@@ -172,6 +173,7 @@ namespace pixeloids_luchelli
         button4 = createButton({ posX, startY + 3 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "ElevenLabs", PINK_MINE);
         button5 = createButton({ posX, startY + 4 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "SORA", PINK_MINE);
         button6 = createButton({ posX, startY + 5 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "SUNO", PINK_MINE);
+        button7 = createButton({ posX, startY + 6 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "Web", PINK_MINE);
     }
 
     void updateCredits()
@@ -216,6 +218,11 @@ namespace pixeloids_luchelli
             PlaySound(buttonSfx);
             OpenURL("https://suno.ai/");
         }
+        if (isButtonClicked(button7))
+        {
+            PlaySound(buttonSfx);
+            OpenURL("https://typodermicfonts.com/ethnocentric/");
+        }
     }
 
     void drawCredits()
@@ -233,7 +240,7 @@ namespace pixeloids_luchelli
 
         const char* title = "Credits";
         int titleX = screenWidth / 2 - MeasureText(title, titleSize) / 2;
-        int titleY = screenHeight / 8;
+        int titleY = 20;
         DrawText(title, titleX, titleY, titleSize, CYAN);
 
         const char* line1 = "Developed by Tomas F. Luchelli";
@@ -242,8 +249,8 @@ namespace pixeloids_luchelli
         DrawText(line1, line1X, line1Y, normalTextSize, WHITE);
 
         const char* line2 = "Sprites and bg by Microsoft Designer AI";
-        int line2X = screenWidth / 3 - MeasureText(line2, normalTextSize) / 2;
-        int line2Y = line1Y + static_cast<int>(spacing * 1.75f);
+        int line2X = (screenWidth / 3) - MeasureText(line2, normalTextSize) / 2;
+        int line2Y = line1Y + static_cast<int>(spacing * 1.5f);
         DrawText(line2, line2X, line2Y, normalTextSize, WHITE);
 
         const char* line3 = "Sfx made with ElevenLabs AI";
@@ -261,12 +268,18 @@ namespace pixeloids_luchelli
         int line5Y = line4Y + spacing;
         DrawText(line5, line5X, line5Y, normalTextSize, WHITE);
 
+        const char* fontLine = "Font by Typodermic Fonts";
+        int fontLineX = (screenWidth / 3 + 40) - MeasureText(fontLine, normalTextSize) / 2;
+        int fontLineY = line5Y + spacing;
+        DrawText(fontLine, fontLineX, fontLineY, normalTextSize, WHITE);
+
         drawButton(button1);
         drawButton(button2);
         drawButton(button3);
         drawButton(button4);
         drawButton(button5);
         drawButton(button6);
+        drawButton(button7);
         drawButton(backToMenuButton);
     }
 

@@ -22,7 +22,5 @@ namespace pixeloids_luchelli
 
 } // namespace pixeloids_luchelli
 
-
-
 #endif // !STATE_MACHINE_H
 

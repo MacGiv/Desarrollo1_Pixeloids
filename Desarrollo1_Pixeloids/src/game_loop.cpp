@@ -1,4 +1,7 @@
 #include "game_loop.h"
+
+#include "raymath.h"
+
 #include "player.h"
 #include "game_data.h"
 #include "bullet.h"
@@ -6,8 +9,6 @@
 #include "button.h"
 #include "main_menu.h"
 #include "state_machine.h"
-
-#include "raymath.h"
 
 namespace pixeloids_luchelli
 {
@@ -19,7 +20,7 @@ enum class Borders {
     BOTTOM
 };
 
-const int playerMaxLives = 10;
+const int playerMaxLives = 5;
 const int maxBullets = 100;
 const int maxAsteroids = 100;
 const int lifeTextSize = 20;
@@ -52,6 +53,7 @@ int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCurrentLives = playerMaxLives;
+bool wantToExit = false;
 
 
 static void update();
@@ -86,7 +88,7 @@ void runGame()
 {
     initializeGame();
 
-    while (!WindowShouldClose()) 
+    while (!WindowShouldClose() && !wantToExit)
     {
         update();
 
@@ -151,7 +153,7 @@ void update()
         updateCredits();
         break;
     case pixeloids_luchelli::GameStates::EXIT:
-        close();
+        wantToExit = true;
         break;
     default:
         break;
@@ -187,7 +189,6 @@ void draw()
         drawCredits();
         break;
     case pixeloids_luchelli::GameStates::EXIT:
-
         break;
     default:
         break;
@@ -213,7 +214,10 @@ void close()
     UnloadMusicStream(mainMenuMusic);
     UnloadMusicStream(gameplayMusic);
     UnloadMusicStream(optionsMusic);
-    CloseAudioDevice();
+    if (IsAudioDeviceReady())
+    {
+        CloseAudioDevice();
+    }
     CloseWindow();
 }
 
@@ -367,6 +371,7 @@ void updateGameOver()
         PlaySound(buttonSfx);
         gameState.nextState = GameStates::PLAYING;
         initializeGame();
+        PlayMusicStream(gameplayMusic);
     }
     if (isButtonClicked(backToMenuButton))
     {

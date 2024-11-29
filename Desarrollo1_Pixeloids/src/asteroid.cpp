@@ -1,4 +1,5 @@
 #include "asteroid.h"
+
 #include "raymath.h"
 
 namespace pixeloids_luchelli
