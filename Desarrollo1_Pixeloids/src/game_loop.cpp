@@ -35,6 +35,8 @@ static Button resumeButton, exitButton,  pauseButton, replayButton;
 Texture2D aSprite;
 Texture2D currentBulletSprite;
 Texture2D backgroundImage;
+Texture2D hudLifeSprite;
+Texture2D hudScoreSprite;
 Sound shootSfx;
 Sound asteroidDestroySfx;
 Sound defeatSfx;
@@ -111,6 +113,8 @@ void initializeGame()
 
     backgroundImage = LoadTexture("res/background_image.png");
     aSprite = LoadTexture("res/asteroid.png");
+    hudLifeSprite = LoadTexture("res/hud_life.png");
+    hudScoreSprite = LoadTexture("res/hud_score.png");
     currentBulletSprite = LoadTexture("res/bullet_sprite.png");
 
     initializeAudio();
@@ -197,6 +201,8 @@ void close()
     UnloadTexture(aSprite);
     UnloadTexture(currentBulletSprite);
     UnloadTexture(backgroundImage);
+    UnloadTexture(hudLifeSprite);
+    UnloadTexture(hudScoreSprite);
     UnloadSound(shootSfx);
     UnloadSound(asteroidDestroySfx);
     UnloadSound(defeatSfx);
@@ -394,19 +400,31 @@ void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite)
 
 void drawPlayerLives(int lives)
 {
-    const char* lifeText = TextFormat("Lives: %d", lives);
-    int textWidth = MeasureText(lifeText, lifeTextSize);
-    int posX = (screenWidth - textWidth) / 2;
-    int posY = screenHeight / 16; 
+    Rectangle sourceRect = { 0.0f, 0.0f, 256.0f, 128.0f };
+    Rectangle destRect = { 0.0f, 0.0f, 256.0f, 128.0f };
+    Vector2 origin = { 0.0f, 0.0f };
 
-    DrawText(lifeText, posX, posY, lifeTextSize, WHITE);
+    DrawTexturePro(hudLifeSprite, sourceRect, destRect, origin, 0.0f, WHITE);
+
+    int posX = static_cast<int>(destRect.x + 20 + destRect.width / 2 - MeasureText(TextFormat("%d", lives), lifeTextSize) / 2);
+    int posY = static_cast<int>(destRect.y + 6 + destRect.height / 2 - lifeTextSize / 2);
+
+    DrawText(TextFormat("%d", lives), posX, posY, lifeTextSize, CYAN);
 }
 
 void drawScore(int score)
 {
-    Vector2 position = { static_cast<float>(GetScreenWidth() - 100), 10.0f };
+    Rectangle sourceRect = { 0.0f, 0.0f, 256.0f, 128.0f };
+    Rectangle destRect = { screenWidth - 256.0f, 0.0f, 256.0f, 128.0f };
+    Vector2 origin = { 0.0f, 0.0f };
+    int scoreTextSize = 20;
 
-    DrawText(TextFormat("Score: %d", score), static_cast<int>(position.x), static_cast<int>(position.y), 20, WHITE);
+    DrawTexturePro(hudScoreSprite, sourceRect, destRect, origin, 0.0f, WHITE);
+
+    int posX = static_cast<int>(destRect.x - 10 + destRect.width / 2 - MeasureText(TextFormat("%d", score), scoreTextSize) / 2);
+    int posY = static_cast<int>(destRect.y + 6 + destRect.height / 2 - scoreTextSize / 2);
+
+    DrawText(TextFormat("%d", score), posX, posY, scoreTextSize, YELLOW);
 }
 
 
