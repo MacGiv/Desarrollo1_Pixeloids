@@ -99,7 +99,7 @@ void initializeGame()
     {
         gameState.currentState = GameStates::MENU;
         gameState.nextState = GameStates::MENU;
-        InitWindow(screenWidth, screenHeight, "Asteroids");
+        InitWindow(screenWidth, screenHeight, "Pixeloids");
     }
 
     playerScore = 0;
