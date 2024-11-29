@@ -21,13 +21,25 @@ namespace pixeloids_luchelli
     static Texture2D menuBackground;
 
     static void initializeCreditsButtons();
-
-    void initializeMenuButtons() 
+    
+    void initializeMenuButtons()
     {
-        playButton = createButton({ 100, 100 }, { 150, 50 }, "Play");
-        creditsButton = createButton({ 100, 300 }, { 150, 50 }, "Credits");
-        howToPlayButton = createButton({ 100, 500 }, { 150, 50 }, "How To Play");
-        quitButton = createButton({ 100, 700 }, { 150, 50 }, "Exit");
+        titleFont = LoadFont("res/ethnocentric_rg_it.otf");
+        menuBackground = LoadTexture("res/menu_background.png");
+        menuOthersBackground = LoadTexture("res/menu_others_background_1.png");
+
+        const Vector2 buttonSize = { 150, 50 };
+        const float buttonSpacing = 50.0f;    
+        const float totalHeight = 4 * buttonSize.y + 3 * buttonSpacing;
+        const float startY = (GetScreenHeight() - totalHeight) / 2.0f;
+
+        const float posX = (GetScreenWidth() - buttonSize.x) / 2.0f;
+
+        playButton = createButton({ posX, startY }, buttonSize, "Play", PINK_MINE);
+        creditsButton = createButton({ posX, startY + buttonSize.y + buttonSpacing }, buttonSize, "Credits", PINK_MINE);
+        howToPlayButton = createButton({ posX, startY + 2 * (buttonSize.y + buttonSpacing) }, buttonSize, "How To Play", PINK_MINE);
+        quitButton = createButton({ posX, startY + 3 * (buttonSize.y + buttonSpacing) }, buttonSize, "Exit", PINK_MINE);
+
         initializeCreditsButtons();
     }
 
