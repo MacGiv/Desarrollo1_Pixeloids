@@ -13,18 +13,8 @@ namespace pixeloids_luchelli
 extern Player player;
 
 GameStateMachine gameState{};
-Texture2D aSprite;
-Texture2D currentBulletSprite;
-Texture2D backgroundImage;
-Texture2D hudLifeSprite;
-Texture2D hudScoreSprite;
-Texture2D shieldTexture;
-Sound shootSfx;
-Sound asteroidDestroySfx;
-Sound defeatSfx;
-Sound buttonSfx;
+
 Music mainMenuMusic;
-Music gameplayMusic;
 Music optionsMusic;
 Font titleFont;
 
@@ -128,19 +118,8 @@ void draw()
 void close()
 {
     unloadMenuRes();
-    UnloadTexture(player.sprite);
-    UnloadTexture(aSprite);
-    UnloadTexture(currentBulletSprite);
-    UnloadTexture(backgroundImage);
-    UnloadTexture(hudLifeSprite);
-    UnloadTexture(hudScoreSprite);
-    UnloadTexture(shieldTexture);
-    UnloadSound(shootSfx);
-    UnloadSound(asteroidDestroySfx);
-    UnloadSound(defeatSfx);
-    UnloadSound(buttonSfx);
+    unloadGameRes();
     UnloadMusicStream(mainMenuMusic);
-    UnloadMusicStream(gameplayMusic);
     UnloadMusicStream(optionsMusic);
     if (IsAudioDeviceReady())
     {
@@ -158,18 +137,10 @@ void initializeAudio()
 
     mainMenuMusic = LoadMusicStream("res/main_menu_music.mp3");
     SetMusicVolume(mainMenuMusic, 0.75f);
-    gameplayMusic = LoadMusicStream("res/gameplay_music.mp3");
-    SetMusicVolume(gameplayMusic, 0.75f);
     optionsMusic = LoadMusicStream("res/options_music.mp3");
     SetMusicVolume(optionsMusic, 0.75f);
-    buttonSfx = LoadSound("res/button_press_sfx.mp3");
-    SetSoundVolume(buttonSfx, 0.75f);
-    shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
-    SetSoundVolume(shootSfx, 0.75f);
-    asteroidDestroySfx = LoadSound("res/asteroid_explosion_sfx.mp3");
-    SetSoundVolume(asteroidDestroySfx, 0.2f);
-    defeatSfx = LoadSound("res/defeat_sfx.mp3");
-    SetSoundVolume(defeatSfx, 0.3f);
+    
+
     PlayMusicStream(mainMenuMusic);
 }
 

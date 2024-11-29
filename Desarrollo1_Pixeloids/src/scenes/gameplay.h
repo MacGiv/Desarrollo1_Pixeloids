@@ -14,6 +14,8 @@ void drawGame();
 void drawPause();
 void drawGameOver();
 
+void unloadGameRes();
+
 } // namespace pixeloids_luchelli
 
 #endif // GAME_LOOP

@@ -35,20 +35,18 @@ static Button resumeButton, exitButton,  pauseButton, replayButton;
 
 extern GameStateMachine gameState;
 
-extern Texture2D aSprite;
-extern Texture2D currentBulletSprite;
-extern Texture2D backgroundImage;
-extern Texture2D hudLifeSprite;
-extern Texture2D hudScoreSprite;
-extern Texture2D shieldTexture;
-extern Sound shootSfx;
-extern Sound asteroidDestroySfx;
-extern Sound defeatSfx;
-extern Sound buttonSfx;
+Texture2D aSprite;
+Texture2D currentBulletSprite;
+Texture2D backgroundImage;
+Texture2D hudLifeSprite;
+Texture2D hudScoreSprite;
+Texture2D shieldTexture;
+Music gameplayMusic;
+Sound shootSfx;
+Sound asteroidDestroySfx;
+Sound defeatSfx;
+Sound buttonSfx;
 extern Music mainMenuMusic;
-extern Music gameplayMusic;
-extern Music optionsMusic;
-extern Font titleFont;
 extern bool wantToExit;
 
 float asteroidSpawnTimer = 0.0f;
@@ -57,10 +55,12 @@ int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCurrentLives = playerMaxLives;
 
-
 static void initializeGameButtons();
 static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
+static void initializeGameAudio();
+static void initializeGameSprites();
+
 
 static void drawGameplayBackground();
 static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
@@ -70,7 +70,8 @@ static void drawScore(int score);
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
 static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
-void SpawnAsteroid(int& asteroidCount);
+static void spawnAsteroid(int& asteroidCount);
+
 
 
 void initializeGame()
@@ -89,16 +90,37 @@ void initializeGame()
 
     initializeBulletArray(bullets, maxBullets);
 
+    initializeGameSprites();
+
+    initializeGameAudio();
+
+    initializeAsteroids(asteroids);
+
+    initializeGameButtons();
+}
+
+void initializeGameAudio()
+{
+    gameplayMusic = LoadMusicStream("res/gameplay_music.mp3");
+    SetMusicVolume(gameplayMusic, 0.75f);
+    buttonSfx = LoadSound("res/button_press_sfx.mp3");
+    SetSoundVolume(buttonSfx, 0.75f);
+    shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
+    SetSoundVolume(shootSfx, 0.75f);
+    asteroidDestroySfx = LoadSound("res/asteroid_explosion_sfx.mp3");
+    SetSoundVolume(asteroidDestroySfx, 0.2f);
+    defeatSfx = LoadSound("res/defeat_sfx.mp3");
+    SetSoundVolume(defeatSfx, 0.3f);
+}
+
+void initializeGameSprites()
+{
     backgroundImage = LoadTexture("res/background_image.png");
     shieldTexture = LoadTexture("res/shield.png");
     aSprite = LoadTexture("res/asteroid.png");
     hudLifeSprite = LoadTexture("res/hud_life.png");
     hudScoreSprite = LoadTexture("res/hud_score.png");
     currentBulletSprite = LoadTexture("res/bullet_sprite.png");
-
-    initializeAsteroids(asteroids);
-
-    initializeGameButtons();
 }
 
 
@@ -188,7 +210,7 @@ void updateGame()
 
     if (asteroidSpawnTimer >= asteroidSpawnInterval)
     {
-        SpawnAsteroid(activeAsteroidCount);
+        spawnAsteroid(activeAsteroidCount);
         asteroidSpawnTimer = 0.0f;
     }
 
@@ -444,7 +466,7 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
     }
 }
 
-void SpawnAsteroid(int& asteroidCount)
+void spawnAsteroid(int& asteroidCount)
 {
     for (int i = 0; i < maxAsteroids; i++)
     {
@@ -460,5 +482,20 @@ void SpawnAsteroid(int& asteroidCount)
     }
 }
 
+void unloadGameRes()
+{
+    UnloadTexture(player.sprite);
+    UnloadTexture(aSprite);
+    UnloadTexture(currentBulletSprite);
+    UnloadTexture(backgroundImage);
+    UnloadTexture(hudLifeSprite);
+    UnloadTexture(hudScoreSprite);
+    UnloadTexture(shieldTexture);
+    UnloadSound(shootSfx);
+    UnloadSound(asteroidDestroySfx);
+    UnloadSound(defeatSfx);
+    UnloadSound(buttonSfx);
+    UnloadMusicStream(gameplayMusic);
+}
 
 } // namespace pixeloids_luchelli
