@@ -41,20 +41,20 @@ void drawBullet(Bullet bullet, Texture2D texture, float bulletRotation)
 {
     if (bullet.active) 
     {
-        DrawCircleV(bullet.position, bullet.radius, YELLOW);
+        //DrawCircleV(bullet.position, bullet.radius, YELLOW);
 
         Rectangle sourceRect = { 0.0f, 0.0f, 64.0f, 64.0f };
         Rectangle destRect = { bullet.position.x, bullet.position.y,
-                               bullet.radius * 4, bullet.radius * 4 };
-        Vector2 origin = { 0.0f, 0.0f };
+                               bullet.radius * 3, bullet.radius * 3 };
+        Vector2 origin = { 20.0f, 20.0f };  // 20 for player radius
 
         DrawTexturePro(
             texture,
             sourceRect,
             destRect,
             origin,
-            bulletRotation,
-            GREEN
+            bulletRotation + 90,
+            WHITE
         );
 
     }

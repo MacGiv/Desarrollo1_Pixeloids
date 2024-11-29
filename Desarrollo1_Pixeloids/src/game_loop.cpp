@@ -19,28 +19,34 @@ enum class Borders {
     BOTTOM
 };
 
-const int playerMaxLives = 3;
+const int playerMaxLives = 10;
 const int maxBullets = 100;
-const int totalAsteroids = 100;
+const int maxAsteroids = 100;
 const int lifeTextSize = 20;
 const float asteroidStartSpeed = 100.0f;
+const float asteroidSpawnInterval = 1.0f;
+
 Player player;
 Bullet bullets[maxBullets];
-Asteroid asteroids[totalAsteroids];
+Asteroid asteroids[maxAsteroids];
 GameStateMachine gameState{};
 Button backToMenuButton;
-static Button  resumeButton, exitButton,  pauseButton;
-
+static Button resumeButton, exitButton,  pauseButton, replayButton;
 Texture2D aSprite;
 Texture2D currentBulletSprite;
 Texture2D backgroundImage;
+Texture2D hudLifeSprite;
+Texture2D hudScoreSprite;
 Sound shootSfx;
 Sound asteroidDestroySfx;
 Sound defeatSfx;
 Sound buttonSfx;
 Music mainMenuMusic;
 Music gameplayMusic;
+Music optionsMusic;
+Font titleFont;
 
+float asteroidSpawnTimer = 0.0f;
 int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
@@ -58,7 +64,6 @@ static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
 
 static void updateGame();
-static void updateAsteroids(Asteroid asteroidsArray[]);
 static void updatePause();
 static void updateGameOver();
 
@@ -73,6 +78,7 @@ static void drawGameOver();
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
 static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
+void SpawnAsteroid(int& asteroidCount);
 
 
 void runGame() 
@@ -95,7 +101,7 @@ void initializeGame()
     {
         gameState.currentState = GameStates::MENU;
         gameState.nextState = GameStates::MENU;
-        InitWindow(screenWidth, screenHeight, "Asteroids");
+        InitWindow(screenWidth, screenHeight, "Pixeloids");
     }
 
     playerScore = 0;
@@ -107,7 +113,9 @@ void initializeGame()
 
     backgroundImage = LoadTexture("res/background_image.png");
     aSprite = LoadTexture("res/asteroid.png");
-    currentBulletSprite = LoadTexture("res/asteroid.png");
+    hudLifeSprite = LoadTexture("res/hud_life.png");
+    hudScoreSprite = LoadTexture("res/hud_score.png");
+    currentBulletSprite = LoadTexture("res/bullet_sprite.png");
 
     initializeAudio();
 
@@ -188,16 +196,20 @@ void draw()
 
 void close()
 {
+    unloadMenuRes();
     UnloadTexture(player.sprite);
     UnloadTexture(aSprite);
     UnloadTexture(currentBulletSprite);
     UnloadTexture(backgroundImage);
+    UnloadTexture(hudLifeSprite);
+    UnloadTexture(hudScoreSprite);
     UnloadSound(shootSfx);
     UnloadSound(asteroidDestroySfx);
     UnloadSound(defeatSfx);
     UnloadSound(buttonSfx);
     UnloadMusicStream(mainMenuMusic);
     UnloadMusicStream(gameplayMusic);
+    UnloadMusicStream(optionsMusic);
     CloseAudioDevice();
     CloseWindow();
 }
@@ -208,9 +220,12 @@ void initializeGameButtons()
     float backToMenuX = (screenWidth / 16);
     float pauseX = (screenWidth / 16) * 14;
     float pauseY = (screenHeight / 8) * 7;
-    resumeButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Resume");
-    pauseButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Pause");
-    backToMenuButton = createButton({ backToMenuX, pauseY }, { 100, 50 }, "Menu");
+    float replayX = screenWidth / 2 - 60;
+    float replayY = screenHeight / 2;
+    resumeButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Resume", PINK_MINE);
+    pauseButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Pause", PINK_MINE);
+    backToMenuButton = createButton({ backToMenuX, pauseY }, { 100, 50 }, "Menu", PINK_MINE);
+    replayButton = createButton({ replayX, replayY }, { 120, 60 }, "Replay", PINK_MINE);
 }
 
 void initializeAudio()
@@ -224,6 +239,8 @@ void initializeAudio()
     SetMusicVolume(mainMenuMusic, 0.75f);
     gameplayMusic = LoadMusicStream("res/gameplay_music.mp3");
     SetMusicVolume(gameplayMusic, 0.75f);
+    optionsMusic = LoadMusicStream("res/options_music.mp3");
+    SetMusicVolume(optionsMusic, 0.75f);
     buttonSfx = LoadSound("res/button_press_sfx.mp3");
     SetSoundVolume(buttonSfx, 0.75f);
     shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
@@ -292,20 +309,27 @@ void updateGame()
     }
 
     // Asteroids update
-    updateAsteroids(asteroids);
+    asteroidSpawnTimer += GetFrameTime();
 
-    // Collision check
+    if (asteroidSpawnTimer >= asteroidSpawnInterval)
+    {
+        SpawnAsteroid(activeAsteroidCount);
+        asteroidSpawnTimer = 0.0f;
+    }
+
+    for (int i = 0; i < maxLargeAsteroids + maxMediumAsteroids + maxSmallAsteroids; i++)
+    {
+        if (asteroids[i].active)
+        {
+            UpdateAsteroid(asteroids[i]);
+        }
+    }
+
+    // Collisions update
     handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
     handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
 }
 
-void updateAsteroids(Asteroid asteroidsArray[])
-{
-    for (int i = 0; i < totalAsteroids; i++)
-    {
-        UpdateAsteroid(asteroidsArray[i]);
-    }
-}
 
 void updatePause()
 {
@@ -325,6 +349,12 @@ void updatePause()
 
 void updateGameOver()
 {
+    if (isButtonClicked(replayButton))
+    {
+        PlaySound(buttonSfx);
+        gameState.nextState = GameStates::PLAYING;
+        initializeGame();
+    }
     if (isButtonClicked(backToMenuButton))
     {
         PlaySound(buttonSfx);
@@ -362,7 +392,7 @@ void drawGameplayBackground()
 
 void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite)
 {
-    for (int i = 0; i < totalAsteroids; i++) 
+    for (int i = 0; i < maxAsteroids; i++) 
     {
         DrawAsteroid(asteroidsArray[i], asteroidSprite);
     }
@@ -370,19 +400,31 @@ void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite)
 
 void drawPlayerLives(int lives)
 {
-    const char* lifeText = TextFormat("Lives: %d", lives);
-    int textWidth = MeasureText(lifeText, lifeTextSize);
-    int posX = (screenWidth - textWidth) / 2;
-    int posY = screenHeight / 16; 
+    Rectangle sourceRect = { 0.0f, 0.0f, 256.0f, 128.0f };
+    Rectangle destRect = { 0.0f, 0.0f, 256.0f, 128.0f };
+    Vector2 origin = { 0.0f, 0.0f };
 
-    DrawText(lifeText, posX, posY, lifeTextSize, WHITE);
+    DrawTexturePro(hudLifeSprite, sourceRect, destRect, origin, 0.0f, WHITE);
+
+    int posX = static_cast<int>(destRect.x + 20 + destRect.width / 2 - MeasureText(TextFormat("%d", lives), lifeTextSize) / 2);
+    int posY = static_cast<int>(destRect.y + 6 + destRect.height / 2 - lifeTextSize / 2);
+
+    DrawText(TextFormat("%d", lives), posX, posY, lifeTextSize, CYAN);
 }
 
 void drawScore(int score)
 {
-    Vector2 position = { static_cast<float>(GetScreenWidth() - 100), 10.0f };
+    Rectangle sourceRect = { 0.0f, 0.0f, 256.0f, 128.0f };
+    Rectangle destRect = { screenWidth - 256.0f, 0.0f, 256.0f, 128.0f };
+    Vector2 origin = { 0.0f, 0.0f };
+    int scoreTextSize = 20;
 
-    DrawText(TextFormat("Score: %d", score), static_cast<int>(position.x), static_cast<int>(position.y), 20, WHITE);
+    DrawTexturePro(hudScoreSprite, sourceRect, destRect, origin, 0.0f, WHITE);
+
+    int posX = static_cast<int>(destRect.x - 10 + destRect.width / 2 - MeasureText(TextFormat("%d", score), scoreTextSize) / 2);
+    int posY = static_cast<int>(destRect.y + 6 + destRect.height / 2 - scoreTextSize / 2);
+
+    DrawText(TextFormat("%d", score), posX, posY, scoreTextSize, YELLOW);
 }
 
 
@@ -395,7 +437,27 @@ void drawPause()
 
 void drawGameOver()
 {
-    DrawText("Game Over", 350, 250, 20, WHITE);
+
+    int titleFontSize = 100;
+    int scoreFontSize = 40;
+    int spacing = 40;
+
+    const char* gameOverText = "Game Over!";
+    const char* scoreText = TextFormat("Your score: %d", playerScore);
+
+    int titleWidth = MeasureText(gameOverText, titleFontSize);
+    int titleX = (screenWidth - titleWidth) / 2;
+    int titleY = screenHeight / 4;              
+    DrawText(gameOverText, titleX, titleY, titleFontSize, CYAN);
+
+    int scoreWidth = MeasureText(scoreText, scoreFontSize);
+    int scoreX = (screenWidth - scoreWidth) / 2;
+    int scoreY = titleY + titleFontSize + spacing;
+    DrawText(scoreText, scoreX, scoreY, scoreFontSize, RAYWHITE);
+
+
+
+    drawButton(replayButton);
     drawButton(backToMenuButton);
     drawButton(exitButton);
 }
@@ -490,6 +552,22 @@ void getRandomPosAndVelocity(Vector2& position, Vector2& velocity)
         velocity = { static_cast<float>(GetRandomValue(-static_cast<int>(asteroidStartSpeed), static_cast<int>(asteroidStartSpeed))),
                      -asteroidStartSpeed };
         break;
+    }
+}
+
+void SpawnAsteroid(int& asteroidCount)
+{
+    for (int i = 0; i < maxAsteroids; i++)
+    {
+        if (!asteroids[i].active)
+        {
+            Vector2 position = {};
+            Vector2 velocity = {};
+            getRandomPosAndVelocity(position,velocity);
+            InitializeAsteroid(asteroids[i], position, velocity, AsteroidSize::LARGE);
+            asteroidCount++;
+            break;
+        }
     }
 }
 

@@ -7,7 +7,7 @@ namespace pixeloids_luchelli
 {
 
 const float bulletDefaultSpeed = 1000.0f;
-const float bulletDefaultRadius = 5.0f;
+const float bulletDefaultRadius = 10.0f;
 
 struct Bullet 
 {
@@ -24,6 +24,6 @@ void updateBullet(Bullet& bullet);
 
 void drawBullet(Bullet bullet, Texture2D texture, float bulletRotation);
 
-#endif
 
 }
+#endif

@@ -11,6 +11,7 @@ namespace pixeloids_luchelli
 	void drawHowToPlay();
 	void updateCredits();
 	void drawCredits();
+	void unloadMenuRes();
 
 } // namespace pixeloids_luchelli
 
