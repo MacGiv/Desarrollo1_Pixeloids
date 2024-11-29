@@ -17,6 +17,8 @@ namespace pixeloids_luchelli
     extern Music optionsMusic;
     extern Button backToMenuButton;
 
+    Font titleFont;
+
     static Button playButton, creditsButton, howToPlayButton, quitButton;
     static Button button1, button2, button3, button4, button5, button6;
     static Texture2D menuBackground;
@@ -80,13 +82,16 @@ namespace pixeloids_luchelli
 
     void drawMenu() 
     {
-        Vector2 titlePosition = { (static_cast<float>(GetScreenWidth()) - MeasureText("PIXELOIDS", 40)) / 2.0f, 50.0f };
-        DrawText("PIXELOIDS", static_cast<int>(titlePosition.x), static_cast<int>(titlePosition.y), 40, CYAN);
+        int titleSize = 120;
+        Vector2 titlePosition = { (static_cast<float>(GetScreenWidth()) - MeasureText("PIXELOIDS", titleSize)) / 2.0f, 50.0f };
 
         Rectangle source = { 0.0f, 0.0f, static_cast<float>(menuBackground.width), static_cast<float>(menuBackground.height) };
         Rectangle dest = { 0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenWidth()) };
         Vector2 origin = { 0.0f, 0.0f };
         DrawTexturePro(menuBackground, source, dest, origin, 0.0f, GRAY);
+        
+        DrawTextEx(titleFont, "PIXELOIDS", titlePosition, static_cast<float>(titleSize), 0, CYAN);
+        
         drawButton(playButton);
         drawButton(creditsButton);
         drawButton(howToPlayButton);
@@ -267,6 +272,7 @@ namespace pixeloids_luchelli
 
     void unloadMenuRes()
     {
+        UnloadFont(titleFont);
         UnloadTexture(menuBackground);
         UnloadTexture(menuOthersBackground);
     }
