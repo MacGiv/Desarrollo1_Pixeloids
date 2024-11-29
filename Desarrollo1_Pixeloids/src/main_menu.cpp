@@ -161,12 +161,12 @@ namespace pixeloids_luchelli
         const float posX = (screenWidth / 5) * 4 - buttonWidth / 2;
         const float startY = 200.0f;
 
-        button1 = createButton({ posX, startY }, { buttonWidth, buttonHeight }, "Itch.io");
-        button2 = createButton({ posX, startY + buttonHeight + buttonSpacing }, { buttonWidth, buttonHeight }, "GitHub");
-        button3 = createButton({ posX, startY + 2 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "MS Designer");
-        button4 = createButton({ posX, startY + 3 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "ElevenLabs");
-        button5 = createButton({ posX, startY + 4 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "SORA");
-        button6 = createButton({ posX, startY + 5 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "SUNO");
+        button1 = createButton({ posX, startY }, { buttonWidth, buttonHeight }, "Itch.io", PINK_MINE);
+        button2 = createButton({ posX, startY + buttonHeight + buttonSpacing }, { buttonWidth, buttonHeight }, "GitHub", PINK_MINE);
+        button3 = createButton({ posX, startY + 2 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "MS Designer", PINK_MINE);
+        button4 = createButton({ posX, startY + 3 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "ElevenLabs", PINK_MINE);
+        button5 = createButton({ posX, startY + 4 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "SORA", PINK_MINE);
+        button6 = createButton({ posX, startY + 5 * (buttonHeight + buttonSpacing) }, { buttonWidth, buttonHeight }, "SUNO", PINK_MINE);
     }
 
     void updateCredits()

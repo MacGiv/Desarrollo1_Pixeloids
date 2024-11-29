@@ -214,9 +214,9 @@ void initializeGameButtons()
     float backToMenuX = (screenWidth / 16);
     float pauseX = (screenWidth / 16) * 14;
     float pauseY = (screenHeight / 8) * 7;
-    resumeButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Resume");
-    pauseButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Pause");
-    backToMenuButton = createButton({ backToMenuX, pauseY }, { 100, 50 }, "Menu");
+    resumeButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Resume", PINK_MINE);
+    pauseButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Pause", PINK_MINE);
+    backToMenuButton = createButton({ backToMenuX, pauseY }, { 100, 50 }, "Menu", PINK_MINE);
 }
 
 void initializeAudio()
