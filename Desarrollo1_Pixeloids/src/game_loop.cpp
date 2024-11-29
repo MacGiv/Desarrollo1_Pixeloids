@@ -24,7 +24,7 @@ const int maxBullets = 100;
 const int maxAsteroids = 100;
 const int lifeTextSize = 20;
 const float asteroidStartSpeed = 100.0f;
-const float asteroidSpawnInterval = 5.0f;
+const float asteroidSpawnInterval = 1.0f;
 
 Player player;
 Bullet bullets[maxBullets];
