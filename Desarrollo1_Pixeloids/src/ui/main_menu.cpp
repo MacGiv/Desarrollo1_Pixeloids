@@ -1,12 +1,11 @@
-#include "main_menu.h"
+#include "ui/main_menu.h"
 
-#include "button.h"
 #include "raylib.h"
-#include "game_data.h"
-#include "state_machine.h"
+#include "raymath.h"  
 
-#include "raymath.h"  // Si lo ponia entre #include "main_menu.h" y 
-                      // #include "button.h" generaba errores, por eso esta aca.
+#include "ui/button.h"
+#include "engine/game_data.h"
+#include "engine/state_machine.h"
 
 namespace pixeloids_luchelli 
 {

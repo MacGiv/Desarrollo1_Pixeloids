@@ -1,4 +1,4 @@
-#include "asteroid.h"
+#include "entities/asteroid.h"
 
 #include "raymath.h"
 
@@ -12,7 +12,7 @@ const float largeAsteroidSize = 40.0f;
 
 void InitializeAsteroid(Asteroid& asteroid, Vector2 position, Vector2 velocity, AsteroidSize size)
 {
-    asteroid.position = position;
+    asteroid.position = position;   
     asteroid.velocity = velocity;
     asteroid.size = size;
     asteroid.active = true;

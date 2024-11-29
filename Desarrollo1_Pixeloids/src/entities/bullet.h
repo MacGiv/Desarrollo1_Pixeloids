@@ -1,7 +1,9 @@
 #ifndef BULLET_H
 #define BULLET_H
+
 #include "raylib.h"
-#include "player.h"
+
+#include "entities/player.h"
 
 namespace pixeloids_luchelli
 {

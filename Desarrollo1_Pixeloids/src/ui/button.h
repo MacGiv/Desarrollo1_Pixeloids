@@ -3,7 +3,6 @@
 
 #include "raylib.h"
 
-
 namespace pixeloids_luchelli 
 {
 

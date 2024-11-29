@@ -1,7 +1,7 @@
-#include "raylib.h"
-
 #ifndef ASTEROID_H
 #define ASTEROID_H
+
+#include "raylib.h"
 
 namespace pixeloids_luchelli 
 {

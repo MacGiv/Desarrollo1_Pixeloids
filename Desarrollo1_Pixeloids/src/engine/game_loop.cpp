@@ -1,14 +1,14 @@
-#include "game_loop.h"
+#include "engine/game_loop.h"
 
 #include "raymath.h"
 
-#include "player.h"
-#include "game_data.h"
-#include "bullet.h"
-#include "asteroid.h"
-#include "button.h"
-#include "main_menu.h"
-#include "state_machine.h"
+#include "entities/player.h"
+#include "entities/bullet.h"
+#include "entities/asteroid.h"
+#include "ui/button.h"
+#include "ui/main_menu.h"
+#include "engine/game_data.h"
+#include "engine/state_machine.h"
 
 namespace pixeloids_luchelli
 {

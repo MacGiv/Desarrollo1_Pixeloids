@@ -1,6 +1,6 @@
-#include "button.h"
+#include "ui/button.h"
 
-#include "game_data.h"
+#include "engine/game_data.h"
 
 namespace pixeloids_luchelli 
 {
