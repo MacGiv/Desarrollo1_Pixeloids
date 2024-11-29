@@ -57,12 +57,14 @@ namespace pixeloids_luchelli
             gameState.nextState = GameStates::PLAYING;
             PlayMusicStream(gameplayMusic);
         }
+
         if (isButtonClicked(quitButton)) 
         {
             PlaySound(buttonSfx);
             StopMusicStream(mainMenuMusic);
             gameState.nextState = GameStates::EXIT;
         }
+
         if (isButtonClicked(creditsButton)) 
         {
             PlaySound(buttonSfx);
@@ -70,6 +72,7 @@ namespace pixeloids_luchelli
             gameState.nextState = GameStates::CREDITS;
             PlayMusicStream(optionsMusic);
         }
+
         if (isButtonClicked(howToPlayButton)) 
         {
             PlaySound(buttonSfx);

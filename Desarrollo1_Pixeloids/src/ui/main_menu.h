@@ -4,14 +4,14 @@
 namespace pixeloids_luchelli
 {
 
-	void initializeMenuButtons();
-	void updateMenu();
-	void drawMenu();
-	void updateHowToPlay();
-	void drawHowToPlay();
-	void updateCredits();
-	void drawCredits();
-	void unloadMenuRes();
+void initializeMenuButtons();
+void updateMenu();
+void drawMenu();
+void updateHowToPlay();
+void drawHowToPlay();
+void updateCredits();
+void drawCredits();
+void unloadMenuRes();
 
 } // namespace pixeloids_luchelli
 
