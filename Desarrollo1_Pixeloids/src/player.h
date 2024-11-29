@@ -14,6 +14,8 @@ struct Player
     float speed;
     float maxSpeed;
     Texture2D sprite;
+    bool shieldActive = false;
+    float shieldTimer = 0.0f;
 };
 
 void initializePlayer(Player& player);
@@ -21,6 +23,8 @@ void initializePlayer(Player& player);
 void updatePlayer(Player& player);
 
 void drawPlayer(Player& player);
+
+void activateShield(Player& player);
 
 }
 

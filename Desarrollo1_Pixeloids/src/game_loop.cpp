@@ -37,6 +37,7 @@ Texture2D currentBulletSprite;
 Texture2D backgroundImage;
 Texture2D hudLifeSprite;
 Texture2D hudScoreSprite;
+Texture2D shieldTexture;
 Sound shootSfx;
 Sound asteroidDestroySfx;
 Sound defeatSfx;
@@ -112,6 +113,7 @@ void initializeGame()
     initializeBulletArray(bullets, maxBullets);
 
     backgroundImage = LoadTexture("res/background_image.png");
+    shieldTexture = LoadTexture("res/shield.png");
     aSprite = LoadTexture("res/asteroid.png");
     hudLifeSprite = LoadTexture("res/hud_life.png");
     hudScoreSprite = LoadTexture("res/hud_score.png");
@@ -203,6 +205,7 @@ void close()
     UnloadTexture(backgroundImage);
     UnloadTexture(hudLifeSprite);
     UnloadTexture(hudScoreSprite);
+    UnloadTexture(shieldTexture);
     UnloadSound(shootSfx);
     UnloadSound(asteroidDestroySfx);
     UnloadSound(defeatSfx);
@@ -285,6 +288,16 @@ void updateGame()
     }
 
     UpdateMusicStream(gameplayMusic);
+
+    // Player Update
+    if (player.shieldActive) 
+    {
+        player.shieldTimer -= GetFrameTime();
+        if (player.shieldTimer <= 0) 
+        {
+            player.shieldActive = false;
+        }
+    }
     updatePlayer(player);
 
     // Bullet Update
@@ -375,6 +388,13 @@ void drawGame()
     }
 
     drawPlayer(player);
+    if (player.shieldActive) 
+    {
+        Rectangle sourceRec = { 0, 0, (float)shieldTexture.width, (float)shieldTexture.height };
+        Rectangle destRec = { player.position.x, player.position.y, 64.0f, 64.0f };
+        Vector2 origin = { 32.0f, 32.0f };
+        DrawTexturePro(shieldTexture, sourceRec, destRec, origin, 0.0f, Fade(WHITE, 0.5f));
+    }
     drawAsteroids(asteroids, aSprite);
     drawButton(pauseButton);
     drawPlayerLives(playerCurrentLives);
@@ -502,6 +522,8 @@ void handleBulletAsteroidCollisions(Bullet bulletsArray[], Asteroid asteroidsArr
 
 void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount)
 {
+    if (player.shieldActive) return;
+
     for (int i = 0; i < asteroidCount; i++)
     {
         if (asteroidsArray[i].active)
@@ -511,6 +533,10 @@ void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[]
             {
                 playerCurrentLives--;
                 asteroidsArray[i].active = false;
+
+                player.shieldActive = true;
+                player.shieldTimer = 3.0f;
+
                 PlaySound(asteroidDestroySfx);
                 if (playerCurrentLives <= 0)
                 {

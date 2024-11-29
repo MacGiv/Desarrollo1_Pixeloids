@@ -68,4 +68,10 @@ void drawPlayer(Player& player)
     );
 }
 
+void activateShield(Player& player) 
+{
+    player.shieldActive = true;
+    player.shieldTimer = 3.0f; // Escudo dura 3 segundos
+}
+
 } // namespace pixeloids_luchelli
