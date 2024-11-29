@@ -111,7 +111,7 @@ void initializeGame()
 
     backgroundImage = LoadTexture("res/background_image.png");
     aSprite = LoadTexture("res/asteroid.png");
-    currentBulletSprite = LoadTexture("res/asteroid.png");
+    currentBulletSprite = LoadTexture("res/bullet_sprite.png");
 
     initializeAudio();
 

@@ -7,7 +7,7 @@ namespace pixeloids_luchelli
 {
 
 const float bulletDefaultSpeed = 1000.0f;
-const float bulletDefaultRadius = 5.0f;
+const float bulletDefaultRadius = 10.0f;
 
 struct Bullet 
 {
