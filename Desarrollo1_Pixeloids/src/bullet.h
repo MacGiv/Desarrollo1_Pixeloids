@@ -24,6 +24,6 @@ void updateBullet(Bullet& bullet);
 
 void drawBullet(Bullet bullet, Texture2D texture, float bulletRotation);
 
-#endif
 
 }
+#endif

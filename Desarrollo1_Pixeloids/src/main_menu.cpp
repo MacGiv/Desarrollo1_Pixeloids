@@ -17,7 +17,7 @@ namespace pixeloids_luchelli
     extern Music optionsMusic;
     extern Button backToMenuButton;
 
-    Font titleFont;
+    extern Font titleFont;
 
     static Button playButton, creditsButton, howToPlayButton, quitButton;
     static Button button1, button2, button3, button4, button5, button6;

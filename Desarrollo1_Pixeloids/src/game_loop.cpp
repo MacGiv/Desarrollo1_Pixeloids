@@ -19,7 +19,7 @@ enum class Borders {
     BOTTOM
 };
 
-const int playerMaxLives = 30;
+const int playerMaxLives = 10;
 const int maxBullets = 100;
 const int maxAsteroids = 100;
 const int lifeTextSize = 20;
@@ -31,8 +31,7 @@ Bullet bullets[maxBullets];
 Asteroid asteroids[maxAsteroids];
 GameStateMachine gameState{};
 Button backToMenuButton;
-static Button  resumeButton, exitButton,  pauseButton;
-
+static Button resumeButton, exitButton,  pauseButton, replayButton;
 Texture2D aSprite;
 Texture2D currentBulletSprite;
 Texture2D backgroundImage;
@@ -43,6 +42,7 @@ Sound buttonSfx;
 Music mainMenuMusic;
 Music gameplayMusic;
 Music optionsMusic;
+Font titleFont;
 
 float asteroidSpawnTimer = 0.0f;
 int activeAsteroidCount = 0;
@@ -214,9 +214,12 @@ void initializeGameButtons()
     float backToMenuX = (screenWidth / 16);
     float pauseX = (screenWidth / 16) * 14;
     float pauseY = (screenHeight / 8) * 7;
+    float replayX = screenWidth / 2 - 60;
+    float replayY = screenHeight / 2;
     resumeButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Resume", PINK_MINE);
     pauseButton = createButton({ pauseX, pauseY }, { 100, 50 }, "Pause", PINK_MINE);
     backToMenuButton = createButton({ backToMenuX, pauseY }, { 100, 50 }, "Menu", PINK_MINE);
+    replayButton = createButton({ replayX, replayY }, { 120, 60 }, "Replay", PINK_MINE);
 }
 
 void initializeAudio()
@@ -316,6 +319,7 @@ void updateGame()
         }
     }
 
+    // Collisions update
     handleBulletAsteroidCollisions(bullets, asteroids, activeAsteroidCount);
     handlePlayerAsteroidCollisions(player, asteroids, activeAsteroidCount);
 }
@@ -339,6 +343,12 @@ void updatePause()
 
 void updateGameOver()
 {
+    if (isButtonClicked(replayButton))
+    {
+        PlaySound(buttonSfx);
+        gameState.nextState = GameStates::PLAYING;
+        initializeGame();
+    }
     if (isButtonClicked(backToMenuButton))
     {
         PlaySound(buttonSfx);
@@ -409,7 +419,27 @@ void drawPause()
 
 void drawGameOver()
 {
-    DrawText("Game Over", 350, 250, 20, WHITE);
+
+    int titleFontSize = 100;
+    int scoreFontSize = 40;
+    int spacing = 40;
+
+    const char* gameOverText = "Game Over!";
+    const char* scoreText = TextFormat("Your score: %d", playerScore);
+
+    int titleWidth = MeasureText(gameOverText, titleFontSize);
+    int titleX = (screenWidth - titleWidth) / 2;
+    int titleY = screenHeight / 4;              
+    DrawText(gameOverText, titleX, titleY, titleFontSize, CYAN);
+
+    int scoreWidth = MeasureText(scoreText, scoreFontSize);
+    int scoreX = (screenWidth - scoreWidth) / 2;
+    int scoreY = titleY + titleFontSize + spacing;
+    DrawText(scoreText, scoreX, scoreY, scoreFontSize, RAYWHITE);
+
+
+
+    drawButton(replayButton);
     drawButton(backToMenuButton);
     drawButton(exitButton);
 }
