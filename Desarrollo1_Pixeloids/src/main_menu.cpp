@@ -18,6 +18,7 @@ namespace pixeloids_luchelli
 
     static Button playButton, creditsButton, howToPlayButton, quitButton;
     static Button button1, button2, button3, button4, button5, button6;
+    static Texture2D menuBackground;
 
     static void initializeCreditsButtons();
 
@@ -66,6 +67,10 @@ namespace pixeloids_luchelli
         Vector2 titlePosition = { (static_cast<float>(GetScreenWidth()) - MeasureText("PIXELOIDS", 40)) / 2.0f, 50.0f };
         DrawText("PIXELOIDS", static_cast<int>(titlePosition.x), static_cast<int>(titlePosition.y), 40, CYAN);
 
+        Rectangle source = { 0.0f, 0.0f, static_cast<float>(menuBackground.width), static_cast<float>(menuBackground.height) };
+        Rectangle dest = { 0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenWidth()) };
+        Vector2 origin = { 0.0f, 0.0f };
+        DrawTexturePro(menuBackground, source, dest, origin, 0.0f, GRAY);
         drawButton(playButton);
         drawButton(creditsButton);
         drawButton(howToPlayButton);
@@ -226,6 +231,11 @@ namespace pixeloids_luchelli
         drawButton(button5);
         drawButton(button6);
         drawButton(backToMenuButton);
+    }
+
+    void unloadMenuRes()
+    {
+        UnloadTexture(menuBackground);
     }
 
 } // namespace pixeloids_luchelli
