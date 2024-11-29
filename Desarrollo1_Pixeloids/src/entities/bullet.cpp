@@ -1,10 +1,10 @@
 #include "entities/bullet.h"
 
+#include "raylib.h"
 #include "raymath.h"
 
 namespace pixeloids_luchelli
 {
-
 
 void fireBullet(Bullet bullets[], int arraySize, Vector2 position, Vector2 direction, Sound bulletSound)
 {

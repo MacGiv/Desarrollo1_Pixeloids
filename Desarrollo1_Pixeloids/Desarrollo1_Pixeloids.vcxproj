@@ -30,11 +30,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\game_loop.cpp" />
-    <ClCompile Include="src\engine\main.cpp" />
-    <ClCompile Include="src\engine\state_machine.cpp" />
     <ClCompile Include="src\entities\asteroid.cpp" />
     <ClCompile Include="src\entities\bullet.cpp" />
     <ClCompile Include="src\entities\player.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ui\button.cpp" />
     <ClCompile Include="src\ui\main_menu.cpp" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include "entities/player.h"
 
+#include "raylib.h"
 #include "raymath.h"
 
 namespace pixeloids_luchelli

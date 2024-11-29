@@ -1,8 +1,6 @@
 #ifndef GAME_LOOP
 #define GAME_LOOP
 
-#include "engine/game_data.h"
-
 namespace pixeloids_luchelli
 {
 

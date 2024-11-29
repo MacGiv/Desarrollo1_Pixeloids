@@ -1,5 +1,6 @@
 #include "engine/game_loop.h"
 
+#include "raylib.h"
 #include "raymath.h"
 
 #include "entities/player.h"

@@ -1,7 +1,6 @@
 #include "ui/main_menu.h"
 
 #include "raylib.h"
-#include "raymath.h"  
 
 #include "ui/button.h"
 #include "engine/game_data.h"
