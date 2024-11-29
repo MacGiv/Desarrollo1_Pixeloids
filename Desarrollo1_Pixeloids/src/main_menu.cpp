@@ -14,6 +14,7 @@ namespace pixeloids_luchelli
     extern Sound buttonSfx;
     extern Music mainMenuMusic;
     extern Music gameplayMusic;
+    extern Music optionsMusic;
     extern Button backToMenuButton;
 
     static Button playButton, creditsButton, howToPlayButton, quitButton;
@@ -66,12 +67,14 @@ namespace pixeloids_luchelli
             PlaySound(buttonSfx);
             StopMusicStream(mainMenuMusic);
             gameState.nextState = GameStates::CREDITS;
+            PlayMusicStream(optionsMusic);
         }
         if (isButtonClicked(howToPlayButton)) 
         {
             PlaySound(buttonSfx);
             StopMusicStream(mainMenuMusic);
             gameState.nextState = GameStates::HOW_TO_PLAY;
+            PlayMusicStream(optionsMusic);
         }
     }
 
@@ -92,9 +95,12 @@ namespace pixeloids_luchelli
 
     void updateHowToPlay() 
     {
+        UpdateMusicStream(optionsMusic);
+
         if (isButtonClicked(backToMenuButton))
         {
             PlaySound(buttonSfx);
+            StopMusicStream(optionsMusic);
             PlayMusicStream(mainMenuMusic);
             gameState.nextState = GameStates::MENU;
         }
@@ -165,10 +171,13 @@ namespace pixeloids_luchelli
 
     void updateCredits()
     {
+        UpdateMusicStream(optionsMusic);
+
         if (isButtonClicked(backToMenuButton))
         {
             PlaySound(buttonSfx);
             gameState.nextState = GameStates::MENU;
+            StopMusicStream(optionsMusic);
             PlayMusicStream(mainMenuMusic);
         }
 

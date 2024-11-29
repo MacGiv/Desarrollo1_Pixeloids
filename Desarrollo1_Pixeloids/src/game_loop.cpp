@@ -42,6 +42,7 @@ Sound defeatSfx;
 Sound buttonSfx;
 Music mainMenuMusic;
 Music gameplayMusic;
+Music optionsMusic;
 
 float asteroidSpawnTimer = 0.0f;
 int activeAsteroidCount = 0;
@@ -191,6 +192,7 @@ void draw()
 
 void close()
 {
+    unloadMenuRes();
     UnloadTexture(player.sprite);
     UnloadTexture(aSprite);
     UnloadTexture(currentBulletSprite);
@@ -201,6 +203,7 @@ void close()
     UnloadSound(buttonSfx);
     UnloadMusicStream(mainMenuMusic);
     UnloadMusicStream(gameplayMusic);
+    UnloadMusicStream(optionsMusic);
     CloseAudioDevice();
     CloseWindow();
 }
@@ -227,6 +230,8 @@ void initializeAudio()
     SetMusicVolume(mainMenuMusic, 0.75f);
     gameplayMusic = LoadMusicStream("res/gameplay_music.mp3");
     SetMusicVolume(gameplayMusic, 0.75f);
+    optionsMusic = LoadMusicStream("res/options_music.mp3");
+    SetMusicVolume(optionsMusic, 0.75f);
     buttonSfx = LoadSound("res/button_press_sfx.mp3");
     SetSoundVolume(buttonSfx, 0.75f);
     shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
