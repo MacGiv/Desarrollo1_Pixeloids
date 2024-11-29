@@ -93,6 +93,11 @@ namespace pixeloids_luchelli
         
         DrawTextEx(titleFont, "PIXELOIDS", titlePosition, static_cast<float>(titleSize), 0, CYAN);
         
+        const char* versionText = "v2.0";
+        int versionTextSize = 20;
+        Vector2 versionPosition = { MeasureText(versionText, versionTextSize) - 20.0f, 10.0f };
+        DrawText(versionText, static_cast<int>(versionPosition.x), static_cast<int>(versionPosition.y), versionTextSize, CYAN);
+
         drawButton(playButton);
         drawButton(creditsButton);
         drawButton(howToPlayButton);
