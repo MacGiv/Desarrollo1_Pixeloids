@@ -1,4 +1,4 @@
-#include "ui/main_menu.h"
+#include "scenes/main_menu.h"
 
 #include "raylib.h"
 

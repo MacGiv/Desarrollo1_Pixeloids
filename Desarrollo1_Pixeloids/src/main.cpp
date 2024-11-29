@@ -1,4 +1,4 @@
-#include "engine/game_loop.h"
+#include "engine/program_loop.h"
 
 int main()
 {

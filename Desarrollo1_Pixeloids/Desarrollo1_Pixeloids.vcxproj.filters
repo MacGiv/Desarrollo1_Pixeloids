@@ -13,12 +13,12 @@
     <Filter Include="Main">
       <UniqueIdentifier>{545f0341-b9a0-403d-a0bd-87be868ad139}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{2442914b-5800-426d-841b-54c8fab09dfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\game_data.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\game_loop.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\state_machine.h">
@@ -36,14 +36,17 @@
     <ClInclude Include="src\ui\button.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\main_menu.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="src\scenes\main_menu.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\program_loop.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\gameplay.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\engine\game_loop.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="src\entities\asteroid.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -56,11 +59,17 @@
     <ClCompile Include="src\ui\button.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\main_menu.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\main_menu.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\program_loop.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\gameplay.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

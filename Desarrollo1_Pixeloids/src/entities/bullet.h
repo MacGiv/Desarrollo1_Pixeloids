@@ -21,11 +21,8 @@ struct Bullet
 };
 
 void fireBullet(Bullet bullets[], int size, Vector2 position, Vector2 direction, Sound bulletSound);
-
 void updateBullet(Bullet& bullet);
-
 void drawBullet(Bullet bullet, Texture2D texture, float bulletRotation);
-
 
 } // namespace pixeloids_luchelli
 

@@ -1,4 +1,4 @@
-#include "engine/game_loop.h"
+#include "scenes/gameplay.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -7,7 +7,6 @@
 #include "entities/bullet.h"
 #include "entities/asteroid.h"
 #include "ui/button.h"
-#include "ui/main_menu.h"
 #include "engine/game_data.h"
 #include "engine/state_machine.h"
 
@@ -31,73 +30,48 @@ const float asteroidSpawnInterval = 3.0f;
 Player player;
 Bullet bullets[maxBullets];
 Asteroid asteroids[maxAsteroids];
-GameStateMachine gameState{};
 Button backToMenuButton;
 static Button resumeButton, exitButton,  pauseButton, replayButton;
-Texture2D aSprite;
-Texture2D currentBulletSprite;
-Texture2D backgroundImage;
-Texture2D hudLifeSprite;
-Texture2D hudScoreSprite;
-Texture2D shieldTexture;
-Sound shootSfx;
-Sound asteroidDestroySfx;
-Sound defeatSfx;
-Sound buttonSfx;
-Music mainMenuMusic;
-Music gameplayMusic;
-Music optionsMusic;
-Font titleFont;
+
+extern GameStateMachine gameState;
+
+extern Texture2D aSprite;
+extern Texture2D currentBulletSprite;
+extern Texture2D backgroundImage;
+extern Texture2D hudLifeSprite;
+extern Texture2D hudScoreSprite;
+extern Texture2D shieldTexture;
+extern Sound shootSfx;
+extern Sound asteroidDestroySfx;
+extern Sound defeatSfx;
+extern Sound buttonSfx;
+extern Music mainMenuMusic;
+extern Music gameplayMusic;
+extern Music optionsMusic;
+extern Font titleFont;
+extern bool wantToExit;
 
 float asteroidSpawnTimer = 0.0f;
 int activeAsteroidCount = 0;
 int playerScore = 0;
 int smallAsteroidDestroyedCount = 0;
 int playerCurrentLives = playerMaxLives;
-bool wantToExit = false;
 
 
-static void update();
-static void draw();
-static void close();
-
-static void initializeGame();
 static void initializeGameButtons();
-static void initializeAudio();
 static void initializeBulletArray(Bullet bullets[], int arraySize);
 static void initializeAsteroids(Asteroid asteroidsArray[]);
 
-static void updateGame();
-static void updatePause();
-static void updateGameOver();
-
-static void drawGame();
 static void drawGameplayBackground();
 static void drawAsteroids(Asteroid asteroidsArray[], Texture2D asteroidSprite);
 static void drawPlayerLives(int lives);
 static void drawScore(int score);
-static void drawPause();
-static void drawGameOver();
 
 static void handleBulletAsteroidCollisions(Bullet bullets[], Asteroid asteroidsArray[], int& asteroidCount);
 static void handlePlayerAsteroidCollisions(Player& auxPlayer, Asteroid asteroidsArray[], int& asteroidCount);
 static void getRandomPosAndVelocity(Vector2& position, Vector2& velocity);
 void SpawnAsteroid(int& asteroidCount);
 
-
-void runGame() 
-{
-    initializeGame();
-
-    while (!WindowShouldClose() && !wantToExit)
-    {
-        update();
-
-        draw();
-    }
-
-    close();
-}
 
 void initializeGame()
 {
@@ -122,104 +96,9 @@ void initializeGame()
     hudScoreSprite = LoadTexture("res/hud_score.png");
     currentBulletSprite = LoadTexture("res/bullet_sprite.png");
 
-    initializeAudio();
-
     initializeAsteroids(asteroids);
 
-    initializeMenuButtons();
-
     initializeGameButtons();
-}
-
-void update() 
-{
-    switch (gameState.currentState)
-    {
-    case pixeloids_luchelli::GameStates::MENU:
-        updateMenu();
-        break;
-    case pixeloids_luchelli::GameStates::HOW_TO_PLAY:
-        updateHowToPlay();
-        break;
-    case pixeloids_luchelli::GameStates::PLAYING:
-        updateGame();
-        break;
-    case pixeloids_luchelli::GameStates::PAUSED:
-        updatePause();
-        break;
-    case pixeloids_luchelli::GameStates::GAME_OVER:
-        updateGameOver();
-        break;
-    case pixeloids_luchelli::GameStates::CREDITS:
-        updateCredits();
-        break;
-    case pixeloids_luchelli::GameStates::EXIT:
-        wantToExit = true;
-        break;
-    default:
-        break;
-    }
-    
-    gameState.currentState = gameState.nextState;
-}
-
-
-void draw()
-{
-    BeginDrawing();
-    ClearBackground(BLACK);
-
-    switch (gameState.currentState)
-    {
-    case pixeloids_luchelli::GameStates::MENU:
-        drawMenu();
-        break;
-    case pixeloids_luchelli::GameStates::HOW_TO_PLAY:
-        drawHowToPlay();
-        break;
-    case pixeloids_luchelli::GameStates::PLAYING:
-        drawGame();
-        break;
-    case pixeloids_luchelli::GameStates::PAUSED:
-        drawPause();
-        break;
-    case pixeloids_luchelli::GameStates::GAME_OVER:
-        drawGameOver();
-        break;
-    case pixeloids_luchelli::GameStates::CREDITS:
-        drawCredits();
-        break;
-    case pixeloids_luchelli::GameStates::EXIT:
-        break;
-    default:
-        break;
-    }
-
-    EndDrawing();
-}
-
-void close()
-{
-    unloadMenuRes();
-    UnloadTexture(player.sprite);
-    UnloadTexture(aSprite);
-    UnloadTexture(currentBulletSprite);
-    UnloadTexture(backgroundImage);
-    UnloadTexture(hudLifeSprite);
-    UnloadTexture(hudScoreSprite);
-    UnloadTexture(shieldTexture);
-    UnloadSound(shootSfx);
-    UnloadSound(asteroidDestroySfx);
-    UnloadSound(defeatSfx);
-    UnloadSound(buttonSfx);
-    UnloadMusicStream(mainMenuMusic);
-    UnloadMusicStream(gameplayMusic);
-    UnloadMusicStream(optionsMusic);
-    if (IsAudioDeviceReady())
-    {
-        CloseAudioDevice();
-    }
-    CloseWindow();
 }
 
 
@@ -236,28 +115,6 @@ void initializeGameButtons()
     replayButton = createButton({ replayX, replayY }, { 120, 60 }, "Replay", PINK_MINE);
 }
 
-void initializeAudio()
-{
-    if (!IsAudioDeviceReady())
-    {
-        InitAudioDevice();
-    }
-
-    mainMenuMusic = LoadMusicStream("res/main_menu_music.mp3");
-    SetMusicVolume(mainMenuMusic, 0.75f);
-    gameplayMusic = LoadMusicStream("res/gameplay_music.mp3");
-    SetMusicVolume(gameplayMusic, 0.75f);
-    optionsMusic = LoadMusicStream("res/options_music.mp3");
-    SetMusicVolume(optionsMusic, 0.75f);
-    buttonSfx = LoadSound("res/button_press_sfx.mp3");
-    SetSoundVolume(buttonSfx, 0.75f);
-    shootSfx = LoadSound("res/player_laser_fire_sfx.mp3");
-    asteroidDestroySfx = LoadSound("res/asteroid_explosion_sfx.mp3");
-    SetSoundVolume(asteroidDestroySfx, 0.2f);
-    defeatSfx = LoadSound("res/defeat_sfx.mp3");
-    SetSoundVolume(defeatSfx, 0.3f);
-    PlayMusicStream(mainMenuMusic);
-}
 
 void initializeBulletArray(Bullet bulletsArray[], int arraySize)
 {
