@@ -19,6 +19,7 @@ namespace pixeloids_luchelli
     static Button playButton, creditsButton, howToPlayButton, quitButton;
     static Button button1, button2, button3, button4, button5, button6;
     static Texture2D menuBackground;
+    static Texture2D menuOthersBackground;
 
     static void initializeCreditsButtons();
     
@@ -102,6 +103,11 @@ namespace pixeloids_luchelli
     void drawHowToPlay() 
     {
         ClearBackground(BLACK);
+
+        Rectangle source = { 0.0f, 0.0f, static_cast<float>(menuOthersBackground.width), static_cast<float>(menuOthersBackground.height) };
+        Rectangle dest = { 0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight()) };
+        Vector2 origin = { 0.0f, 0.0f };
+        DrawTexturePro(menuOthersBackground, source, dest, origin, 0.0f, DARKGRAY);
 
         const char* title = "How to Play";
         int titleSize = 60;
@@ -202,6 +208,11 @@ namespace pixeloids_luchelli
     {
         ClearBackground(BLACK);
 
+        Rectangle source = { 0.0f, 0.0f, static_cast<float>(menuOthersBackground.width), static_cast<float>(menuOthersBackground.height) };
+        Rectangle dest = { 0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight()) };
+        Vector2 origin = { 0.0f, 0.0f };
+        DrawTexturePro(menuOthersBackground, source, dest, origin, 0.0f, DARKGRAY);
+
         int titleSize = 60;
         int normalTextSize = 30;
         int spacing = normalTextSize + 60;
@@ -248,6 +259,7 @@ namespace pixeloids_luchelli
     void unloadMenuRes()
     {
         UnloadTexture(menuBackground);
+        UnloadTexture(menuOthersBackground);
     }
 
 } // namespace pixeloids_luchelli
