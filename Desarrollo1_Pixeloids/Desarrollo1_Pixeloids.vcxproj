@@ -20,22 +20,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\game_data.h" />
-    <ClInclude Include="src\engine\game_loop.h" />
+    <ClInclude Include="src\engine\program_loop.h" />
     <ClInclude Include="src\engine\state_machine.h" />
     <ClInclude Include="src\entities\asteroid.h" />
     <ClInclude Include="src\entities\bullet.h" />
     <ClInclude Include="src\entities\player.h" />
+    <ClInclude Include="src\scenes\gameplay.h" />
+    <ClInclude Include="src\scenes\main_menu.h" />
     <ClInclude Include="src\ui\button.h" />
-    <ClInclude Include="src\ui\main_menu.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\engine\game_loop.cpp" />
+    <ClCompile Include="src\engine\program_loop.cpp" />
     <ClCompile Include="src\entities\asteroid.cpp" />
     <ClCompile Include="src\entities\bullet.cpp" />
     <ClCompile Include="src\entities\player.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\scenes\gameplay.cpp" />
+    <ClCompile Include="src\scenes\main_menu.cpp" />
     <ClCompile Include="src\ui\button.cpp" />
-    <ClCompile Include="src\ui\main_menu.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
